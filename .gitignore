@@ -1,2 +1,4 @@
-__pycache__
-.venv
+# ou venv/
+.venv/
+#.env
+__pycache__/
