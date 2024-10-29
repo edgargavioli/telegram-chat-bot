@@ -1,6 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const button = document.getElementById("greet-btn");
-    button.addEventListener("click", function() {
-        alert("Olá! Bem-vindo ao Projeto Flask!");
-    });
-});
+function toggleSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    sidebar.classList.toggle("collapsed");
+}

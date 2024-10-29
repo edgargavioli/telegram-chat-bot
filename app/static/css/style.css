@@ -1,18 +1,127 @@
-body {
-    font-family: Arial, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-main {
-    width: 100vw;
-    height: 100vh;
+.container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
+.sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width 0.3s ease;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1.5em;
+    margin: 10px;
     cursor: pointer;
+}
+
+.sidebar-nav ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+
+.sidebar-nav li {
+    width: 100%;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.sidebar.collapsed .sidebar-nav a span {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-nav a .sidebar-pic {
+    margin: 0;
+}
+
+.sidebar-nav a:hover {
+    background-color: #e0e0e0;
+}
+
+.sidebar-pic {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar-logo {
+    font-size: 1.5em;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-user span {
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-pic {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.logout-btn {
+    padding: 5px 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.page-content {
+    padding: 20px;
 }
