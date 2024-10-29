@@ -1,15 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Project</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </head>
 <body>
-    <main class="main">
-        {% block content %}{% endblock %}
-    </main>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <div class="container">
+        <aside class="sidebar">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="/clientes/"><img src="{{ url_for('static', filename='img/pessoas.png') }}" alt="Clientes" class="sidebar-pic"><span>Clientes</span></a></li>
+                    <li><a href="/categorias/"><img src="{{ url_for('static', filename='img/pasta.png') }}" alt="Categorias" class="sidebar-pic"><span>Categorias</span></a></li>
+                    <li><a href="/produtos/"><img src="{{ url_for('static', filename='img/caixa.png') }}" alt="Produtos" class="sidebar-pic"><span>Produtos</span></a></li>
+                    <li><a href="/pedidos/"><img src="{{ url_for('static', filename='img/carrinho.png') }}" alt="Pedidos" class="sidebar-pic"><span>Pedidos</span></a></li>
+                    <li><a href="/transmitir/"><img src="{{ url_for('static', filename='img/broadcast.png') }}" alt="Transmitir" class="sidebar-pic"><span>Transmitir</span></a></li>
+                    <li><a href="/mensagens/"><img src="{{ url_for('static', filename='img/envelope.png') }}" alt="Mensagens" class="sidebar-pic"><span>Mensagens</span></a></li>
+                    <li><a href="/usuarios/"><img src="{{ url_for('static', filename='img/detetive.png') }}" alt="Usuários" class="sidebar-pic"><span>Usuários</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="navbar">
+                <div class="navbar-logo"><a href="/home/">LOGO</a></div>
+                <div class="navbar-user">
+                    <span>NOME USUÁRIO</span>
+                    <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Foto do perfil" class="profile-pic">
+                    <a href="/logout" class="logout-btn">Logout</a>
+                </div>
+            </header>
+            
+            <section class="page-content">
+                {% block content %}{% endblock %}
+            </section>
+        </main>
+    </div>
 </body>
 </html>
