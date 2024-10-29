@@ -48,14 +48,18 @@ Abaixo está a estrutura do projeto, com uma explicação de cada diretório e a
    ```bash
    python3 -m venv .venv
    .venv\Scripts\activate
-3. **Ou crie o ambiente virtual na pasta venv**:
-   ```bash
-   python3 -m venv venv
-   venv\Scripts\activate
+3. **Delete a pasta venv**
 4. **Instale as dependências**:
    ```bash
    pip install -r requirements.txt
 5. **Execute a aplicação**:
    ```bash
    flask run
+6. **Para executar a aplicação em debug mode(hotreload)**:
+  ```bash
+  $env:FLASK_DEBUG = "1" //utilizar comando no vscode usando powershell
+  // --------------------------
+  // Linux e Mac
+  $ export FLASK_APP=run.py
+  $ export FLASK_DEBUG=1
 Acesse http://localhost:5000/users/greet para ver a página exemplo desse projeto.
