@@ -23,30 +23,13 @@ from datetime import datetime, timezone
 
 migrate = Migrate()
 login_manager = LoginManager()
-app = Flask(__name__)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.before_request
-def check_session_expiration():
-    if current_user.is_authenticated:
-        login_time_cookie = request.cookies.get('login_time')
-        if login_time_cookie:
-            login_time = datetime.strptime(login_time_cookie, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc)
-            elapsed_time = datetime.now(timezone.utc) - login_time
-            session_lifetime = app.permanent_session_lifetime
-            if elapsed_time > session_lifetime:
-                logout_user()
-                flash('Sua sessão expirou. Faça login novamente.', 'warning')
-                return redirect(url_for('login.login'))
-            
-@app.context_processor
-def inject_user():
-    return dict(username=current_user.username if current_user.is_authenticated else None)
-
 def create_app():
+    app = Flask(__name__)
     
     app.config.from_object(Config)
     
@@ -70,6 +53,23 @@ def create_app():
     app.register_blueprint(produtos_bp)
     app.register_blueprint(transmitir_bp)
     app.register_blueprint(usuarios_bp)
+
+    @app.before_request
+    def check_session_expiration():
+        if current_user.is_authenticated:
+            login_time_cookie = request.cookies.get('login_time')
+            if login_time_cookie:
+                login_time = datetime.strptime(login_time_cookie, '%Y-%m-%d %H:%M:%S').replace(tzinfo=timezone.utc)
+                elapsed_time = datetime.now(timezone.utc) - login_time
+                session_lifetime = app.permanent_session_lifetime
+                if elapsed_time > session_lifetime:
+                    logout_user()
+                    flash('Sua sessão expirou. Faça login novamente.', 'warning')
+                    return redirect(url_for('login.login'))
+            
+    @app.context_processor
+    def inject_user():
+        return dict(username=current_user.username if current_user.is_authenticated else None)
 
     with app.app_context():
         db.create_all()
