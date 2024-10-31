@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response
 from flask_login import login_user, logout_user, current_user
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 from datetime import datetime, timezone
-from api.models.user import User
+from api.models.users import User
 
 bp = Blueprint('login', __name__)
 
@@ -22,8 +22,6 @@ def login():
         username = request.form['username']
         password = request.form['password']
         remember_me = 'save-session' in request.form
-
-        print(generate_password_hash(password))
 
         user = User.query.filter_by(username=username).first()
         

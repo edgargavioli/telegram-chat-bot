@@ -1,4 +1,10 @@
 from flask import Flask, request, redirect, url_for, flash
+from api.controllers import categories_controller
+from api.controllers import clients_controller
+from api.controllers import orders_controller
+from api.controllers import orders_items_controller
+from api.controllers import products_controller
+from api.controllers import user_controller
 from .routes.login import bp as login_bp
 from .routes.home import bp as home_bp
 from .routes.categorias import bp as categorias_bp
@@ -11,14 +17,13 @@ from .routes.usuarios import bp as usuarios_bp
 from .config import Config
 from flask_migrate import Migrate
 from api.models.db import db
-from api.models.user import User
+from api.models.users import User
 from api.models.categories import Category
 from api.models.products import Product
 from api.models.orders import Order
 from api.models.clients import Client
 from api.models.orders_items import OrderItems
-from flask_login import LoginManager, current_user
-from flask_login import logout_user
+from flask_login import LoginManager, current_user, logout_user
 from datetime import datetime, timezone
 
 migrate = Migrate()
@@ -44,6 +49,12 @@ def create_app():
     migrate.init_app(app, db, directory='./migrations')
 
     # Registrar Blueprints
+    app.register_blueprint(categories_controller.category_bp)
+    app.register_blueprint(clients_controller.client_bp)
+    app.register_blueprint(orders_controller.order_bp)
+    app.register_blueprint(orders_items_controller.order_items_bp)
+    app.register_blueprint(products_controller.product_bp)
+    app.register_blueprint(user_controller.user_bp)
     app.register_blueprint(login_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(categorias_bp)
