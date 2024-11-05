@@ -28,7 +28,7 @@
             <header class="navbar">
                 <div class="navbar-logo"><a href="/home/">LOGO</a></div>
                 <div class="navbar-user">
-                    <span>NOME USUÁRIO</span>
+                    <span>{{ username }}</span>
                     <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Foto do perfil" class="profile-pic">
                     <a href="/logout" class="logout-btn">Logout</a>
                 </div>
