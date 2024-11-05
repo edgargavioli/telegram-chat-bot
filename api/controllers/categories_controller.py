@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, redirect, render_template, request, abort, url_for
 from api.models.categories import Category
 from api.models.db import db
 from functools import wraps
@@ -31,22 +31,28 @@ def get_category(id):
 @category_bp.route('/categories', methods=['POST'])
 @login_required
 def create_category():
-    data = request.get_json()
-    new_category = Category(name=data['name'])
-    db.session.add(new_category)
-    db.session.commit()
-    return jsonify({'id': new_category.id, 'name': new_category.name}), 201
+    if request.method == 'POST':
+        name = request.form.get('name')
+        if name:
+            new_category = Category(name=name)
+            db.session.add(new_category)
+            db.session.commit()
+            return redirect(url_for('categorias.categorias'))
+        else:
+            pass
+    return render_template('pages/categorias/adicionar_categoria.html')
 
-@category_bp.route('/categories/<int:id>', methods=['PUT'])
+@category_bp.route('/categories/<int:id>', methods=['POST', 'PUT'])
 @login_required
 def update_category(id):
-    category = Category.query.get(id)
-    if not category:
-        return abort(404, 'Category not found')
-    data = request.get_json()
-    category.name = data['name']
-    db.session.commit()
-    return jsonify({'id': category.id, 'name': category.name})
+    category = Category.query.get_or_404(id)
+    name = request.form.get('name')
+    if name:
+        category.name = name
+        db.session.commit()
+        return redirect(url_for('categorias.categorias'))
+    else:
+        pass
 
 @category_bp.route('/categories/<int:id>', methods=['DELETE'])
 @login_required
