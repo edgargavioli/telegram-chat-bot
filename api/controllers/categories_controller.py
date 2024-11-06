@@ -28,7 +28,7 @@ def get_category(id):
         return abort(404, 'Category not found')
     return jsonify({'id': category.id, 'name': category.name})
 
-@category_bp.route('/categories', methods=['POST'])
+@category_bp.route('/categories', methods=['GET', 'POST'])
 @login_required
 def create_category():
     if request.method == 'POST':

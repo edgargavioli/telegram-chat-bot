@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="page-content">
+        <div class="header-container">
+            <h1>Produtos</h1>
+            <button onclick="window.location.href='{{ url_for('produtos.adicionar_produto') }}'" class="action-btn add">Adicionar Novo Produto</button>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Preço</th>
+                    <th>Categoria</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="productsTable">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/produtos/produtos.js') }}" defer></script>
+
+{% endblock %}

@@ -329,3 +329,44 @@
     height: 20px;
     cursor: pointer;
 }
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-field label {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.product-form-title{
+    margin-bottom: 20px;
+}
