@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="page-content">
+        <div class="header-container">
+            <h1>Categorias</h1>
+            <button onclick="window.location.href='{{ url_for('categorias.adicionar_categoria') }}'" class="action-btn add">Adicionar Nova Categoria</button>
+        </div>        
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="categoriesTable">
+            </tbody>
+        </table>
+        <script src="{{ url_for('static', filename='js/categorias.js') }}" defer></script>
+    </div>
+{% endblock %}
