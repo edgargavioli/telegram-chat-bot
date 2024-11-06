@@ -2,11 +2,17 @@
 
 {% block content %}
     <div class="page-content">
-        <h1 class="login-title">Adicionar Nova Categoria</h1>
-        <form method="post" class="form-container" action="/api/categories">
-            <label for="name">Nome da Categoria:</label>
-            <input type="text" id="name" name="name" required class="login-input">
-            <button type="submit" class="login-btn">Adicionar</button>
+        <h1 class="product-form-title">Adicionar Nova Categoria</h1>
+        <form method="post" class="product-form-container" action="/api/categories">
+
+            <div class="form-field">
+                <label for="name">Nome da Categoria:</label>
+                <input type="text" id="name" name="name" required class="login-input">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="login-btn">Adicionar</button>
+            </div>
         </form>
         <button onclick="window.location.href='{{ url_for('categorias.categorias') }}'" class="action-btn cancel">Cancelar</button>
     </div>

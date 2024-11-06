@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, request, url_for
 from . import login
 from api.models.categories import Category
-from api.models.db import db
 
 bp = Blueprint('categorias', __name__, url_prefix='/categorias')
 
