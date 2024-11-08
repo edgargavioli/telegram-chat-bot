@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="page-content">
+        <h1 class="product-form-title">Adicionar Novo Pedido</h1>
+        <form method="post" class="product-form-container" action="/api/orders" enctype="multipart/form-data">
+            
+            <div class="form-field">
+                <label for="date">Data de criação:</label>
+                <input type="date" id="date" name="date" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="Status">Status:</label>
+                <select id="statusSelect" name="status_id" required class="login-input">
+                    <option value="">Selecione um status...</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="pronto">Pronto</option>
+                    <option value="andamento">Em andamento...</option>
+                    <option value="aberto">Aberto</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="price">Preço:</label>
+                <input type="number" step="0.01" id="price" name="price" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="price">idClient:</label>
+                <input type="text" name="Cliente_id" id="id" required class="login-input">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="login-btn">Adicionar</button>
+            </div>
+        </form>
+
+        <button onclick="window.location.href='{{ url_for('orders.orders') }}'" class="action-btn cancel">Cancelar</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/orders/adicionarOrders.js') }}" defer></script>
+
+{% endblock %}

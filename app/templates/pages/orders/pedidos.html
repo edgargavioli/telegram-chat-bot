@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="page-content">
+        <div class="header-container">
+            <h1>Pedidos</h1>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Data de criação</th>
+                    <th>Status</th>
+                    <th>Quantidade</th>
+                    <th>Action</th>                    
+                </tr>
+            </thead>
+            <tbody id="ordersTable">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/orders/orders.js') }}" defer></script>
+
+{% endblock %}
