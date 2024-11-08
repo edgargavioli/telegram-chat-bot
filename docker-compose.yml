@@ -8,6 +8,12 @@ services:
       - ./app/static/img/produtos:/app/static/img/produtos
     depends_on:
       - db
+  
+  bot:
+    build: ./bot
+    command: python main.py
+    depends_on:
+      - web
     
   db:
     image: mysql:5.7

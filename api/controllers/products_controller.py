@@ -17,7 +17,6 @@ def login_required(f):
     return decorated_function
 
 @product_bp.route('/products', methods=['GET'])
-@login_required
 def get_products():
     products = Product.query.all()
     return jsonify([{
@@ -34,7 +33,6 @@ def get_products():
     } for product in products])
 
 @product_bp.route('/products/<int:id>', methods=['GET'])
-@login_required
 def get_product(id):
     product = Product.query.get(id)
     if not product:
@@ -53,7 +51,6 @@ def get_product(id):
     })
 
 @product_bp.route('/products', methods=['GET', 'POST'])
-@login_required
 def create_product():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -83,7 +80,6 @@ def create_product():
     return render_template('pages/produtos/adicionar_produto.html')
 
 @product_bp.route('/products/<int:id>', methods=['POST', 'PUT'])
-@login_required
 def update_product(id):
     product = Product.query.get(id)
     product.name = request.form['name']
@@ -101,7 +97,6 @@ def update_product(id):
     return redirect(url_for('produtos.produtos'))
 
 @product_bp.route('/products/<int:id>', methods=['DELETE'])
-@login_required
 def delete_product(id):
     product = Product.query.get(id)
     if not product:
