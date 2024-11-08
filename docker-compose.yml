@@ -9,11 +9,11 @@ services:
     depends_on:
       - db
   
-  bot:
-    build: ./bot
-    command: python main.py
-    depends_on:
-      - web
+  # bot:
+  #   build: ./bot
+  #   command: python main.py
+  #   depends_on:
+  #     - web
     
   db:
     image: mysql:5.7
