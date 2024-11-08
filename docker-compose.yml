@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    command: python main.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app/static/img/produtos:/app/static/img/produtos
+    depends_on:
+      - db
+    
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ulimits:
+      nofile: # Fix memory leak issue on some systems when LimitCORE=infinity (containerd)
+        soft: 1048576
+        hard: 1048576
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+volumes:
+  mysql_data:
