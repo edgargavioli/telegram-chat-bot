@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <div class="toggle-btn" onclick="toggleSidebar()">
+                <img id="close-sidebar" class="seta-direita" src="{{ url_for('static', filename='img/icons/menu-close.svg') }}" alt=""/>
+                <img id="open-sidebar" class="hidden seta-esquerda" src="{{ url_for('static', filename='img/icons/menu-close.svg') }}" alt=""/>
+            </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="/clientes/"><img src="{{ url_for('static', filename='img/pessoas.png') }}" alt="Clientes" class="sidebar-pic"><span>Clientes</span></a></li>
-                    <li><a href="/categorias/"><img src="{{ url_for('static', filename='img/pasta.png') }}" alt="Categorias" class="sidebar-pic"><span>Categorias</span></a></li>
-                    <li><a href="/produtos/"><img src="{{ url_for('static', filename='img/caixa.png') }}" alt="Produtos" class="sidebar-pic"><span>Produtos</span></a></li>
-                    <li><a href="/pedidos/"><img src="{{ url_for('static', filename='img/carrinho.png') }}" alt="Pedidos" class="sidebar-pic"><span>Pedidos</span></a></li>
-                    <li><a href="/transmitir/"><img src="{{ url_for('static', filename='img/broadcast.png') }}" alt="Transmitir" class="sidebar-pic"><span>Transmitir</span></a></li>
-                    <li><a href="/mensagens/"><img src="{{ url_for('static', filename='img/envelope.png') }}" alt="Mensagens" class="sidebar-pic"><span>Mensagens</span></a></li>
-                    <li><a href="/usuarios/"><img src="{{ url_for('static', filename='img/detetive.png') }}" alt="Usuários" class="sidebar-pic"><span>Usuários</span></a></li>
+                    <li><a href="/clientes/"><img src="{{ url_for('static', filename='img/icons/clients.svg') }}" alt="Clientes" class="sidebar-pic"><span>Clientes</span></a></li>
+                    <li><a href="/categorias/"><img src="{{ url_for('static', filename='img/icons/category.svg') }}" alt="Categorias" class="sidebar-pic"><span>Categorias</span></a></li>
+                    <li><a href="/produtos/"><img src="{{ url_for('static', filename='img/icons/product.svg') }}" alt="Produtos" class="sidebar-pic"><span>Produtos</span></a></li>
+                    <li><a href="/pedidos/"><img src="{{ url_for('static', filename='img/icons/orders.svg') }}" alt="Pedidos" class="sidebar-pic"><span>Pedidos</span></a></li>
+                    <li><a href="/transmitir/"><img src="{{ url_for('static', filename='img/icons/trasmite.svg') }}" alt="Transmitir" class="sidebar-pic"><span>Transmitir</span></a></li>
+                    <li><a href="/mensagens/"><img src="{{ url_for('static', filename='img/icons/message.svg') }}" alt="Mensagens" class="sidebar-pic"><span>Mensagens</span></a></li>
+                    <li><a href="/usuarios/"><img src="{{ url_for('static', filename='img/icons/users.svg') }}" alt="Usuários" class="sidebar-pic"><span>Usuários</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -29,7 +35,7 @@
                 <div class="navbar-logo"><a href="/home/">LOGO</a></div>
                 <div class="navbar-user">
                     <span>{{ username }}</span>
-                    <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Foto do perfil" class="profile-pic">
+                    <img src="{{ url_for('static', filename='img/icons/user.svg') }}" alt="Foto do perfil" class="profile-pic">
                     <a href="/logout" class="logout-btn">Logout</a>
                 </div>
             </header>
