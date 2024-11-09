@@ -10,3 +10,20 @@ def pedidos():
     else:
         flash('Por favor, faça login para acessar esta página.', 'warning')
         return redirect(url_for('login.login'))
+    
+@bp.route('/adicionar')
+def adicionar_pedidos():
+    if login.current_user.is_authenticated:
+        return render_template('pages/orders/adicionar_pedido.html')
+    else:
+        flash('Por favor, faça login para acessar esta página.', 'warning')
+        return redirect(url_for('login.login'))
+
+@bp.route('/editar/<int:id>')
+def editar_pedidos(id):
+    if login.current_user.is_authenticated:
+        product = Product.query.get_or_404(id)
+        return render_template('pages/orders/editar_orders.html', product=product)
+    else:
+        flash('Por favor, faça login para acessar esta página.', 'warning')
+        return redirect(url_for('login.login'))

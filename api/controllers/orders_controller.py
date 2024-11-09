@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, redirect, render_template, request, abort, url_for
 from api.models.orders import Order
 from api.models.db import db
 from functools import wraps
@@ -59,22 +59,26 @@ def get_order(id):
 @order_bp.route('/orders', methods=['POST'])
 @login_required
 def create_order():
-    data = request.get_json()
-    new_order = Order(
-        created_date=data['created_date'],
-        status=data['status'],
-        amount=data['amount'],
-        client_id=data['client_id']
-    )
-    db.session.add(new_order)
-    db.session.commit()
-    return jsonify({
-        'id': new_order.id,
-        'created_date': new_order.created_date,
-        'status': new_order.status,
-        'amount': new_order.amount,
-        'client_id': new_order.client_id
-    }), 201
+    if request.method == 'POST':
+        created_date = request.form.get("created_date")
+        created_time = request.form.get("created_time")
+        status = request.form.get("status")
+        amount = request.form.get("amount")
+        client_id = request.form.get("client_id")
+        created_date_time = f"{created_date} {created_time}"
+        if created_date_time and status and amount and client_id:
+            new_order = Order(
+                created_date=created_date_time,
+                status=status,
+                amount=amount,
+                client_id=client_id
+            )
+            db.session.add(new_order)
+            db.session.commit()
+            return redirect(url_for('pedidos.pedidos'))
+        else:
+            pass
+    return render_template('pages/orders/adicionar_pedido.html')    
 
 @order_bp.route('/orders/<int:id>', methods=['PUT'])
 @login_required
