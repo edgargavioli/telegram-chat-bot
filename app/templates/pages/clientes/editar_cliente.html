@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-content">
+    <h1 class="product-form-title">Editar Cliente</h1>
+    <form id="client-form" method="POST" action="{{ url_for('clientes.editar_cliente', id=cliente.id) }}" class="product-form-container">
+        <div class="form-field">
+            <label for="chat_id">Chat Id</label>
+            <input type="text" id="chat_id" name="chat_id" value="{{ cliente.chat_id }}" required class="login-input">
+        </div>
+    
+        <div class="form-field">
+            <label for="name">Nome do Cliente:</label>
+            <input type="text" id="name" name="name" value="{{ cliente.name }}" required class="login-input">
+        </div>
+        
+        <div class="form-field">
+            <label for="phone_number">Número de Telefone:</label>
+            <input type="tel" id="phone_number" name="phone_number" value="{{ cliente.phone_number }}" required class="login-input">
+        </div>
+
+        <div class="form-field">
+            <label for="city">Cidade:</label>
+            <input type="text" id="city" name="city" value="{{ cliente.city }}" required class="login-input">
+        </div>
+        
+        <div class="form-field">
+            <label for="address">Endereço:</label>
+            <input type="text" id="address" name="address" value="{{ cliente.address }}" required class="login-input">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="login-btn">Salvar Alterações</button>
+        </div>
+    </form>
+    <button onclick="window.location.href='{{ url_for('clientes.clientes') }}'" class="action-btn cancel">Cancelar</button>
+</div>
+{% endblock %}
