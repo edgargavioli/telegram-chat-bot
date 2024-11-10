@@ -59,28 +59,6 @@ def create_client():
         # Retorna uma resposta JSON com status 200 e URL para redirecionamento
         return jsonify({'message': 'Cliente adicionado com sucesso', 'redirect': '/clientes'}), 200
 
-# Rota para atualizar um cliente
-@client_bp.route('/clients/<int:id>', methods=['POST', 'PUT'])
-@login_required
-def update_client(id):
-    client = Client.query.get_or_404(id)
-    chat_id = request.form.get('chat_id')
-    phone_number = request.form.get('phone_number')
-    name = request.form.get('name')
-    city = request.form.get('city')
-    address = request.form.get('address')
-    if chat_id and phone_number and name and city and address:
-        client.chat_id = chat_id
-        client.phone_number = phone_number
-        client.name = name
-        client.city = city
-        client.address = address
-        db.session.commit()
-        return redirect(url_for('clientes.clientes'))
-    else:
-        pass
-
-
 # Rota para deletar um cliente
 @client_bp.route('/clients/<int:id>', methods=['DELETE'])
 @login_required
@@ -93,3 +71,20 @@ def delete_client(id):
     db.session.commit()
     
     return jsonify({'message': 'Client deleted'})
+
+@client_bp.route('/clients/<int:id>', methods=['PUT'])
+@login_required
+def update_client(id):
+    client = Client.query.get(id)
+    if not client:
+        return abort(404, 'Client not found')
+    
+    # Atualiza os dados do cliente com os valores do formulário
+    data = request.form
+    client.name = data.get('name', client.name)
+    client.chat_id = data.get('chat_id', client.chat_id)
+    client.phone_number = data.get('phone_number', client.phone_number)
+    client.city = data.get('city', client.city)
+    client.address = data.get('address', client.address)
+    db.session.commit()
+    return jsonify({'message': 'Cliente atualizado com sucesso'}), 200

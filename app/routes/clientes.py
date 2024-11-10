@@ -11,40 +11,8 @@ bp = Blueprint('clientes', __name__, url_prefix='/clientes')
 @bp.route('/')
 def clientes():
     if login.current_user.is_authenticated:
+        clientes= Client.query.all()
         return render_template('pages/clientes/clientes.html')
-    else:
-        flash('Por favor, faça login para acessar esta página.', 'warning')
-        return redirect(url_for('login.login'))
-
-@bp.route('/editar/<int:id>', methods=['GET', 'POST'])
-def editar_cliente(id):
-    if login.current_user.is_authenticated:
-        try:
-            cliente = Client.query.get(id)  # Obtém o cliente pelo ID
-            if cliente is None:
-                flash('Cliente não encontrado!', 'danger')
-                return redirect(url_for('clientes.clientes'))
-
-            if request.method == 'POST':
-                # Atualiza os campos do cliente com os novos valores do formulário
-                cliente.chat_id = request.form['chat_id']
-                cliente.name = request.form['name']
-                cliente.phone_number = request.form['phone_number']
-                cliente.city = request.form['city']
-                cliente.address = request.form['address']
-
-                # Salva as alterações no banco
-                db.session.commit()
-
-                flash('Cliente atualizado com sucesso!', 'success')
-                return redirect(url_for('clientes.clientes'))  # Redireciona para a página de clientes
-
-            # Renderiza o formulário de edição com os dados do cliente
-            return render_template('pages/clientes/editar_cliente.html', cliente=cliente)
-        
-        except Exception as e:
-            flash(f'Erro ao editar o cliente: {str(e)}', 'danger')
-            return redirect(url_for('clientes.clientes'))
     else:
         flash('Por favor, faça login para acessar esta página.', 'warning')
         return redirect(url_for('login.login'))
@@ -56,3 +24,30 @@ def adicionar_cliente():
     else:
         flash('Por favor, faça login para acessar esta página.', 'warning')
         return redirect(url_for('login.login'))
+
+@bp.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar_cliente(id):
+    if not login.current_user.is_authenticated:
+        flash('Por favor, faça login para acessar esta página.', 'warning')
+        return redirect(url_for('login.login'))
+
+    cliente = Client.query.get(id)
+    if not cliente:
+        flash('Cliente não encontrado.', 'danger')
+        return redirect(url_for('clientes.clientes'))
+
+    if request.method == 'POST':
+        # Atualizar as informações do cliente com os dados do formulário
+        cliente.chat_id = request.form['chat_id']
+        cliente.name = request.form['name']
+        cliente.phone_number = request.form['phone_number']
+        cliente.city = request.form['city']
+        cliente.address = request.form['address']
+
+        db.session.commit()
+
+        flash('Cliente atualizado com sucesso!', 'success')
+        return redirect(url_for('clientes.clientes'))
+
+    # Para o método GET, exibir o formulário de edição preenchido com os dados do cliente
+    return render_template('pages/clientes/editar_cliente.html', cliente=cliente)

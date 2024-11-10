@@ -16,6 +16,10 @@ async function deleteClient(id) {
 }
 
 async function loadClients() {
+
+    const editIconUrl = `${window.location.origin}/static/img/editar.png`;
+    const deleteIconUrl = `${window.location.origin}/static/img/excluir.png`;
+
     try {
         const response = await fetch('/api/clients'); // Corrigido o endpoint
         if (!response.ok) {
@@ -35,8 +39,12 @@ async function loadClients() {
                 <td>${client.city}</td>
                 <td>${client.address}</td>
                 <td>
-                    <button onclick="editClient(${client.id})">Editar</button>
-                    <button onclick="deleteClient(${client.id})">Excluir</button>
+                    <button onclick="editClient(${client.id})">
+                     <img src="${editIconUrl}" alt="Editar" class="action-pic">
+                     </button>
+                    <button onclick="deleteClient(${client.id})">
+                     <img src="${deleteIconUrl}" alt="Excluir" class="action-pic">
+                    </button>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -49,5 +57,3 @@ async function loadClients() {
     function editClient(id){
         window.location.href =  `/clientes/editar/${id}`;
     }
-
-    document.addEventListener("DOMContentLoaded", loadClients);
