@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="page-content">
+        <h1 class="product-form-title">Editar Usuário</h1>
+        <form method="post" class="product-form-container" action="/api/users/{{ user.id }}">
+
+            <div class="form-field">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" value="{{ user.name }}" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" value="" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="role">Cargo:</label>
+                <select id="role" name="role" required class="login-input">
+                    <option value="" disabled selected>Selecione um cargo</option>
+                    <option value="Admin" {% if user.role == 'Admin' %}selected{% endif %}>Administrador</option>
+                    <option value="Moder" {% if user.role == 'Moder' %}selected{% endif %}>Moderador</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="login-btn">Salvar Alterações</button>
+            </div>
+        </form>
+        <button onclick="window.location.href='{{ url_for('usuarios.usuarios') }}'" class="action-btn cancel">Cancelar</button>
+    </div>
+{% endblock %}

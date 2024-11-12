@@ -2,12 +2,12 @@ async function loadClientsForSelect() {
     try {
         const response = await fetch('/api/clients');
         if (!response.ok) {
-            throw new Error("Erro ao carregar as clientes.");
+            throw new Error("Erro ao carregar os clientes.");
         }
         
         const clients = await response.json();
         const clientSelect = document.getElementById('client_id');
-        clientSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+        clientSelect.innerHTML = '<option value="" disabled selected>Selecione um cliente</option>';
 
         clients.forEach(client => {
             const option = document.createElement('option');
@@ -17,7 +17,7 @@ async function loadClientsForSelect() {
         });
     } catch (error) {
         console.error(error);
-        alert("Erro ao carregar as clientes.");
+        alert("Erro ao carregar os clientes.");
     }
 }
 

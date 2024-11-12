@@ -1,6 +1,6 @@
 async function deleteClient(id) {
     if (confirm("Tem certeza de que deseja excluir este cliente?")) {
-        const response = await fetch(`/api/clients/${id}`, { // Corrigido o uso de crase
+        const response = await fetch(`/api/clients/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -16,35 +16,28 @@ async function deleteClient(id) {
 }
 
 async function loadClients() {
-
-    const editIconUrl = `${window.location.origin}/static/img/editar.png`;
-    const deleteIconUrl = `${window.location.origin}/static/img/excluir.png`;
-
     try {
-        const response = await fetch('/api/clients'); // Corrigido o endpoint
+        const response = await fetch('/api/clients');
         if (!response.ok) {
             throw new Error("Erro ao carregar os clientes.");
         }
         const clients = await response.json();
-        const tableBody = document.getElementById('clienteTable'); // Corrigido o ID no HTML
+        const tableBody = document.getElementById('clientsTable');
         tableBody.innerHTML = '';
+
+        const editIconUrl = `${window.location.origin}/static/img/editar.png`;
+        const deleteIconUrl = `${window.location.origin}/static/img/excluir.png`;
 
         clients.forEach(client => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${client.id}</td>
-                <td>${client.chat_id}</td>
                 <td>${client.name}</td>
-                <td>${client.phone_number}</td>
                 <td>${client.city}</td>
-                <td>${client.address}</td>
+                <td>${client.is_active === true ? "Sim" : "Não"}</td>
                 <td>
-                    <button onclick="editClient(${client.id})">
-                     <img src="${editIconUrl}" alt="Editar" class="action-pic">
-                     </button>
-                    <button onclick="deleteClient(${client.id})">
-                     <img src="${deleteIconUrl}" alt="Excluir" class="action-pic">
-                    </button>
+                    <a onclick="window.location.href='${window.location.origin}/clientes/editar/${client.id}'"><img src="${editIconUrl}" alt="Editar" class="action-pic"></a>
+                    <a onclick="deleteClient(${client.id})"><img src="${deleteIconUrl}" alt="Excluir" class="action-pic"></a>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -54,6 +47,5 @@ async function loadClients() {
         alert("Erro ao carregar os clientes.");
     }
 }
-    function editClient(id){
-        window.location.href =  `/clientes/editar/${id}`;
-    }
+
+window.onload = loadClients;

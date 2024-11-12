@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Home</h1>
+    <div class="welcome-container">
+        <h1>Bem-vindo, {{ username }}!</h1>
+        <p class="welcome-message">
+            Esta é a página inicial da área de administração do bot de vendas do Telegram.
+        </p>
+    </div>
 {% endblock %}
