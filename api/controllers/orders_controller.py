@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, redirect, render_template, request, abort, url_for
 from api.models.orders import Order
 from api.models.db import db
 from functools import wraps
@@ -59,42 +59,40 @@ def get_order(id):
 @order_bp.route('/orders', methods=['POST'])
 @login_required
 def create_order():
-    data = request.get_json()
-    new_order = Order(
-        created_date=data['created_date'],
-        status=data['status'],
-        amount=data['amount'],
-        client_id=data['client_id']
-    )
-    db.session.add(new_order)
-    db.session.commit()
-    return jsonify({
-        'id': new_order.id,
-        'created_date': new_order.created_date,
-        'status': new_order.status,
-        'amount': new_order.amount,
-        'client_id': new_order.client_id
-    }), 201
+    if request.method == 'POST':
+        created_date = request.form.get('created_date')
+        created_time = request.form.get('created_time')
+        status = request.form.get('status')
+        amount = request.form.get('amount')
+        client_id = request.form.get('client_id')
+        created_date_time = f'{created_date} {created_time}'
+        if created_date_time and status and amount and client_id:
+            new_order = Order(
+                created_date=created_date_time,
+                status=status,
+                amount=amount,
+                client_id=client_id
+            )
+            db.session.add(new_order)
+            db.session.commit()
+            return redirect(url_for('pedidos.pedidos'))
+        else:
+            pass
+    return render_template('pages/pedidos/adicionar_pedido.html')
 
-@order_bp.route('/orders/<int:id>', methods=['PUT'])
+@order_bp.route('/orders/<int:id>', methods=['POST', 'PUT'])
 @login_required
 def update_order(id):
     order = Order.query.get(id)
-    if not order:
-        return abort(404, 'Order not found')
-    data = request.get_json()
-    order.created_date = data['created_date']
-    order.status = data['status']
-    order.amount = data['amount']
-    order.client_id = data['client_id']
-    db.session.commit()
-    return jsonify({
-        'id': order.id,
-        'created_date': order.created_date,
-        'status': order.status,
-        'amount': order.amount,
-        'client_id': order.client_id
-    })
+    new_date = request.form.get('saved_date')
+    new_time = request.form.get('saved_time')
+    order.created_date = f'{new_date} {new_time}'
+    order.status = request.form.get('status')
+    order.amount = request.form.get('amount')
+    order.client_id = request.form.get('client_id')
+    if order.created_date and order.status and order.amount and order.client_id:
+        db.session.commit()
+    return redirect(url_for('pedidos.pedidos'))
 
 @order_bp.route('/orders/<int:id>', methods=['DELETE'])
 @login_required

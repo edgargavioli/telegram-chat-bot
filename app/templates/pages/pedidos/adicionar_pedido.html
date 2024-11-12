@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="page-content">
+        <h1 class="product-form-title">Adicionar Novo Pedido</h1>
+        <form method="post" class="product-form-container" action="/api/orders">
+
+            <div class="form-field">
+                <label for="created_date">Data de Criação:</label>
+                <input type="date" id="created_date" name="created_date" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="created_time">Hora de Criação:</label>
+                <input type="time" id="created_time" name="created_time" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="status">Status:</label>
+                <select id="status" name="status" required class="login-input">
+                    <option value="">Selecione um status</option>
+                    <option value="Espera">Em Espera</option>
+                    <option value="Aceito">Aceito</option>
+                    <option value="Recusado">Recusado</option>
+                    <option value="Preparando">Preparando</option>
+                    <option value="Pronto">Pronto</option>
+                    <option value="Entrega">Saiu para Entrega</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="amount">Valor:</label>
+                <input type="number" step="0.01" id="amount" name="amount" required class="login-input">
+            </div>
+
+            <div class="form-field">
+                <label for="client_id">Cliente:</label>
+                <select id="client_id" name="client_id" required class="login-input">
+                    <option value="">Carregando clientes...</option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="login-btn">Adicionar</button>
+            </div>
+        </form>
+        <button onclick="window.location.href='{{ url_for('pedidos.pedidos') }}'" class="action-btn cancel">Cancelar</button>
+    </div>
+    <script src="{{ url_for('static', filename='js/pedidos/adicionarPedido.js') }}" defer></script>
+{% endblock %}
