@@ -15,18 +15,23 @@ def login_required(f):
     return decorated_function
 
 @category_bp.route('/categories', methods=['GET'])
-@login_required
 def get_categories():
     categories = Category.query.all()
     return jsonify([{'id': category.id, 'name': category.name} for category in categories])
 
 @category_bp.route('/categories/<int:id>', methods=['GET'])
-@login_required
 def get_category(id):
     category = Category.query.get(id)
     if not category:
         return abort(404, 'Category not found')
     return jsonify({'id': category.id, 'name': category.name})
+
+@category_bp.route('/categories/<int:id>/product', methods=['GET'])
+def get_category_products(id):
+    category = Category.query.get(id)
+    if not category:
+        return abort(404, 'Category not found')
+    return jsonify([{'id': product.id, 'name': product.name, 'price': product.price, 'photo_url': product.photo_url} for product in category.products])
 
 @category_bp.route('/categories', methods=['GET', 'POST'])
 @login_required
