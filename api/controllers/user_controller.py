@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, redirect, render_template, request, abort, url_for
 from api.models.users import User
 from api.models.db import db
 from werkzeug.security import generate_password_hash
@@ -24,7 +24,6 @@ def get_users():
         'name': user.name,
         'username': user.username,
         'password': user.password,
-        'is_active': user.is_active,
         'role': user.role
     } for user in users])
 
@@ -39,53 +38,48 @@ def get_user(id):
         'name': user.name,
         'username': user.username,
         'password': user.password,
-        'is_active': user.is_active,
         'role': user.role
     })
 
-@user_bp.route('/users', methods=['POST'])
+@user_bp.route('/users', methods=['GET', 'POST'])
 @login_required
 def create_user():
-    data = request.get_json()
-    new_user = User(
-        name=data['name'],
-        username=data['username'],
-        password=generate_password_hash(data['password']),
-        is_active=data['is_active'],
-        role=data['role']
-    )
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({
-        'id': new_user.id,
-        'name': new_user.name,
-        'username': new_user.username,
-        'password': new_user.password,
-        'is_active': new_user.is_active,
-        'role': new_user.role
-    }), 201
+    if request.method == 'POST':
+        name = request.form.get('name')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        role = request.form.get('role')
+        if name and username and password and role:
+            new_user = User(
+                name=name,
+                username=username,
+                password=generate_password_hash(password),
+                role=role
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('usuarios.usuarios'))
+        else:
+            pass
+    return render_template('pages/usuarios/adicionar_usuario.html')
 
-@user_bp.route('/users/<int:id>', methods=['PUT'])
+@user_bp.route('/users/<int:id>', methods=['POST', 'PUT'])
 @login_required
 def update_user(id):
-    user = User.query.get(id)
-    if not user:
-        return abort(404, 'User not found')
-    data = request.get_json()
-    user.name = data['name']
-    user.username = data['username']
-    user.password = generate_password_hash(data['password'])
-    user.is_active = data['is_active']
-    user.role = data['role']
-    db.session.commit()
-    return jsonify({
-        'id': user.id,
-        'name': user.name,
-        'username': user.username,
-        'password': user.password,
-        'is_active': user.is_active,
-        'role': user.role
-    })
+    user = User.query.get_or_404(id)
+    name = request.form.get('name')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    role = request.form.get('role')
+    if name and username and password and role:
+        user.name = name
+        user.username = username
+        user.password = generate_password_hash(password)
+        user.role = role
+        db.session.commit()
+        return redirect(url_for('usuarios.usuarios'))
+    else:
+        pass
 
 @user_bp.route('/users/<int:id>', methods=['DELETE'])
 @login_required

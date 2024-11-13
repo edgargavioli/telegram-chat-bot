@@ -4,29 +4,23 @@
     <div class="page-content">
         <div class="header-container">
             <h1>Clientes</h1>
-            <button onclick="window.location.href='{{ url_for('clientes.adicionar_cliente') }}'" class="action-btn add">Adicionar Cliente</button>
-        </div>
+            <button onclick="window.location.href='{{ url_for('clientes.adicionar_cliente') }}'" class="action-btn add">Adicionar Novo Cliente</button>
+        </div>        
 
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Chat_id</th>
                     <th>Nome</th>
-                    <th>Número de Telefone</th>
                     <th>Cidade</th>
-                    <th>Endereço</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="clienteTable"> <!-- Corrigido o ID -->
-                <!-- As linhas serão preenchidas aqui via JavaScript -->
+            <tbody id="clientsTable">
             </tbody>
         </table>
-        <script src="{{ url_for('static', filename='js/clientes/clientes.js') }}" defer></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                loadClients();  // Chama a função para carregar os clientes ao carregar a página
-            });
-        </script>
     </div>
+
+    <script src="{{ url_for('static', filename='js/clientes/clientes.js') }}" defer></script>
 {% endblock %}

@@ -9,7 +9,7 @@ async function loadCategoriesForSelect() {
         const categorySelect = document.getElementById('categorySelect');
         const selectedCategoryId = categorySelect.getAttribute('data-selected-category');
 
-        categorySelect.innerHTML = '<option value="">Selecione uma categoria</option>';
+        categorySelect.innerHTML = '<option value="" disabled selected>Selecione uma categoria</option>';
 
         categories.forEach(category => {
             const option = document.createElement('option');
