@@ -54,6 +54,33 @@ def create_client():
             pass
     return render_template('pages/clientes/adicionar_cliente.html')
 
+@client_bp.route('/clients/start', methods=['GET', 'POST'])
+def create_client_bot():
+    if request.method == 'POST':
+        data = request.get_json()
+
+        chat_id = data.get('chat_id')
+        name = data.get('name')
+        if chat_id and name:
+            new_client = Client(
+                chat_id=chat_id,
+                name=name,
+            )
+            db.session.add(new_client)
+            db.session.commit()
+            return jsonify({'message': 'Client created successfully'}), 200
+        else:
+            return jsonify({'message': 'Client error'}), 404
+
+@client_bp.route('/clients/bot<int:chat_id>', methods=['GET'])
+def get_client_by_chat_id(chat_id):
+    client = Client.query.filter_by(chat_id=chat_id).first()
+    if not client:
+        return abort(404, 'Client not found')
+    
+    return jsonify({
+        'chat_id': client.chat_id,
+    })
 
 @client_bp.route('/clients/<int:id>', methods=['POST', 'PUT'])
 @login_required
