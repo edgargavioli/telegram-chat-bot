@@ -1,3 +1,5 @@
+const messagesContainer = document.querySelector('.messages-content');
+
 document.querySelector('.message-input').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
         sendMessage();
@@ -10,8 +12,26 @@ function sendMessage() {
     const input = document.querySelector('.message-input');
     const messageContent = input.value.trim();
     if (messageContent) {
-        const messagesContainer = document.querySelector('.messages-content');
-        
+        const liqeuquero = document.querySelectorAll('.active');
+
+        fetch('/api/messages/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                chat_id: liqeuquero[0].getAttribute('data-chat-id'),
+                message: messageContent
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao enviar mensagem');
+            }
+            return response.json();
+        }).then(response => {
+            console.log(response);
+        })
+
         const message = document.createElement('div');
         message.classList.add('message', 'sent');
         message.textContent = messageContent;
@@ -41,8 +61,10 @@ function loadContacts() {
                 listItem.onclick = () => {
                     carregarMensagens(client.id);
                 }
+                console.log(client);
                 listItem.classList.add('contact-item');
                 listItem.setAttribute('data-id', client.id);
+                listItem.setAttribute('data-chat-id', client.chat_id);
                 listItem.setAttribute('data-name', client.name);
                 
                 listItem.innerHTML = `
@@ -73,12 +95,20 @@ function carregarMensagens(clientId) {
             const contactName = document.getElementById('contact-name');
             const contactPic = document.getElementById('contact-pic');
             const messageInputContainer = document.querySelector('.message-input-container');
+            const lis = document.querySelectorAll('.contact-item');
+
+            lis.forEach(li => {
+                if (li.getAttribute('data-id') === clientId.toString()) {
+                    li.classList.add('active');
+                } else {
+                    li.classList.remove('active');
+                }
+            })
 
             contactName.textContent = client.name;
             contactPic.style.display = 'block';
             messageInputContainer.style.display = 'flex';
 
-            const messagesContainer = document.querySelector('.messages-content');
             messagesContainer.innerHTML = '';
             const receivedMessage1 = document.createElement('div');
             receivedMessage1.classList.add('message', 'received');
