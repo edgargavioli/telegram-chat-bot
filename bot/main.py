@@ -2,6 +2,7 @@ from typing import Final
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler, InlineQueryHandler, CallbackContext, MessageHandler, filters
 import requests
+from commands.client import client_register
 from commands.catalog import catalog_command
 from commands.catalog import handle_callback_query
 from commands.cart import cart_command, button
@@ -32,6 +33,7 @@ async def responder_palavra_chave(update: Update, context: CallbackContext):
             await update.message.reply_text("Desculpe, não entendi sua mensagem.")
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await client_register(update, context)
     await update.message.reply_text("Online shop :)")
 
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
