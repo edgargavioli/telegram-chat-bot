@@ -26,6 +26,7 @@ from api.models.clients import Client
 from api.models.orders_items import OrderItems
 from flask_login import LoginManager, current_user, logout_user
 from datetime import datetime, timezone
+from flask_socketio import SocketIO, emit
 
 migrate = Migrate()
 login_manager = LoginManager()
@@ -34,8 +35,10 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 def create_app():
     app = Flask(__name__)
+    socketio = SocketIO(app, cors_allowed_origins="*")
     
     app.config.from_object(Config)
     
@@ -66,6 +69,11 @@ def create_app():
     app.register_blueprint(produtos_bp)
     app.register_blueprint(transmitir_bp)
     app.register_blueprint(usuarios_bp)
+
+    @socketio.on('new_message')
+    def handle_new_message(data):
+        print(f"Mensagem recebida: {data}")
+        emit('new_message', data, broadcast=True)
 
     @app.before_request
     def check_session_expiration():

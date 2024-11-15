@@ -1,6 +1,34 @@
 const messagesContainer = document.querySelector('.messages-content');
 const sendBtn = document.querySelector('.send-btn');
 
+const socket = io('http://localhost:5000');
+
+let mensagem = [];
+
+socket.on('new_message', (msg_back) => {
+    // Obtém o ID do chat ativo
+    let chatAtivo = document.querySelector('.contact-item.active').getAttribute('data-chat-id');
+    
+    // Adiciona a mensagem recebida no array de mensagens
+    mensagem.push(msg_back);
+    console.log(msg_back);
+    console.log(chatAtivo);
+    
+    // Verifica se a mensagem recebida é do chat ativo
+    if (msg_back.chat_id == chatAtivo) {
+        // Cria um novo elemento de mensagem recebida
+        const message = document.createElement('div');
+        message.classList.add('message', 'received');
+        message.textContent = msg_back.message;
+        
+        // Adiciona a nova mensagem ao contêiner de mensagens
+        messagesContainer.appendChild(message);
+
+        // Rola a área de mensagens para baixo (para mostrar a nova mensagem)
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+});
+
 document.querySelector('.message-input').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
         sendMessage();
@@ -160,6 +188,15 @@ function carregarMensagens(clientId) {
             receivedMessage4.classList.add('message', 'received');
             receivedMessage4.textContent = `phone_number: ${client.phone_number}`;
             messagesContainer.appendChild(receivedMessage4);
+
+            mensagem.forEach(msg => {
+                if(msg.chat_id === client.chat_id) {
+                    const message = document.createElement('div');
+                    message.classList.add('message', 'received');
+                    message.textContent = msg.message;
+                    messagesContainer.appendChild(message);
+                }
+            });
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         })
