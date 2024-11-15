@@ -6,6 +6,7 @@ from commands.client import client_register
 from commands.catalog import catalog_command
 from commands.catalog import handle_callback_query
 from commands.cart import cart_command, button
+from commands.send_backend_message import updates_to_backend
 from config import TOKEN, BOT_USERNAME, API_URL
 
 async def responder_palavra_chave(update: Update, context: CallbackContext):
@@ -33,6 +34,8 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("catalog", catalog_command))
     app.add_handler(CommandHandler("cart", cart_command))
+
+    app.add_handler(MessageHandler(filters.ALL, updates_to_backend))
 
     app.add_handler(CallbackQueryHandler(handle_callback_query))
 

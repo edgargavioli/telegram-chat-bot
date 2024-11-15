@@ -6,6 +6,7 @@ from api.controllers import orders_items_controller
 from api.controllers import products_controller
 from api.controllers import user_controller
 from api.controllers import messages_controller
+from api.controllers.messages_controller import socketio
 from .routes.login import bp as login_bp
 from .routes.home import bp as home_bp
 from .routes.categorias import bp as categorias_bp
@@ -48,6 +49,7 @@ def create_app():
 
     # Configura o migrations
     migrate.init_app(app, db, directory='./migrations')
+    socketio.init_app(app)
 
     # Registrar Blueprints
     app.register_blueprint(categories_controller.category_bp)
