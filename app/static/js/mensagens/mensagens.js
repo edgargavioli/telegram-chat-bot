@@ -1,4 +1,5 @@
 const messagesContainer = document.querySelector('.messages-content');
+const sendBtn = document.querySelector('.send-btn');
 
 document.querySelector('.message-input').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
@@ -6,31 +7,46 @@ document.querySelector('.message-input').addEventListener('keydown', function (e
     }
 });
 
-document.querySelector('.send-btn').addEventListener('click', sendMessage);
+sendBtn.addEventListener('click', sendMessage);
+
+function fetchMessages(chatId, messageContent) {
+    fetch('/api/messages/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            chat_id: chatId,
+            message: messageContent
+        })
+    }).catch(error => {
+        console.error(error);
+    });
+}
 
 function sendMessage() {
     const input = document.querySelector('.message-input');
     const messageContent = input.value.trim();
-    if (messageContent) {
-        const liqeuquero = document.querySelectorAll('.active');
+    const liqeuquero = document.querySelectorAll('.contact-item');
 
-        fetch('/api/messages/send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: liqeuquero[0].getAttribute('data-chat-id'),
-                message: messageContent
-            })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Erro ao enviar mensagem');
-            }
-            return response.json();
-        }).then(response => {
-            console.log(response);
+    if(sendBtn.classList.contains('transmitir-btn')) {
+        liqeuquero.forEach(li => {
+            const chatId = li.getAttribute('data-chat-id');
+            fetchMessages(chatId, messageContent);
         })
+        const message = document.createElement('div');
+        message.classList.add('message', 'sent');
+        message.textContent = messageContent;
+        messagesContainer.appendChild(message);
+        input.value = '';
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return
+    }
+
+    if (messageContent) {
+        const activeContact = document.querySelector('.contact-item.active');
+
+        fetchMessages(activeContact.getAttribute('data-chat-id'), messageContent);
 
         const message = document.createElement('div');
         message.classList.add('message', 'sent');
@@ -61,12 +77,11 @@ function loadContacts() {
                 listItem.onclick = () => {
                     carregarMensagens(client.id);
                 }
-                console.log(client);
                 listItem.classList.add('contact-item');
                 listItem.setAttribute('data-id', client.id);
                 listItem.setAttribute('data-chat-id', client.chat_id);
                 listItem.setAttribute('data-name', client.name);
-                
+
                 listItem.innerHTML = `
                     <img src="/static/img/icons/user.svg" alt="${client.name}" class="contact-pic">
                     <div class="contact-info">
@@ -74,7 +89,7 @@ function loadContacts() {
                         <span class="last-message">Última mensagem...</span>
                     </div>
                 `;
-                
+
                 contactsList.appendChild(listItem);
             });
         })
@@ -92,6 +107,7 @@ function carregarMensagens(clientId) {
             return response.json();
         })
         .then(client => {
+            sendBtn.classList.remove('transmitir-btn');
             const contactName = document.getElementById('contact-name');
             const contactPic = document.getElementById('contact-pic');
             const messageInputContainer = document.querySelector('.message-input-container');
@@ -152,10 +168,23 @@ function carregarMensagens(clientId) {
         });
 }
 
+function transmitir() {
+    sendBtn.classList.add('transmitir-btn');
+    const contactName = document.getElementById('contact-name');
+    const messageInputContainer = document.querySelector('.message-input-container');
+
+    contactName.textContent = 'Transmissão';
+    messageInputContainer.style.display = 'flex';
+
+    messagesContainer.innerHTML = '';
+
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
 function filterContacts() {
     const searchInput = document.getElementById('search-input').value.toLowerCase();
     const contactItems = document.querySelectorAll('.contact-item');
-    
+
     contactItems.forEach(item => {
         const contactName = item.getAttribute('data-name').toLowerCase();
         if (contactName.indexOf(searchInput) !== -1) {
