@@ -6,7 +6,6 @@ from api.controllers import orders_items_controller
 from api.controllers import products_controller
 from api.controllers import user_controller
 from api.controllers import messages_controller
-from api.controllers.messages_controller import socketio
 from .routes.login import bp as login_bp
 from .routes.home import bp as home_bp
 from .routes.categorias import bp as categorias_bp
@@ -27,6 +26,7 @@ from api.models.clients import Client
 from api.models.orders_items import OrderItems
 from flask_login import LoginManager, current_user, logout_user
 from datetime import datetime, timezone
+from flask_socketio import SocketIO, emit
 
 migrate = Migrate()
 login_manager = LoginManager()
@@ -35,8 +35,10 @@ login_manager = LoginManager()
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 def create_app():
     app = Flask(__name__)
+    socketio = SocketIO(app, cors_allowed_origins="*")
     
     app.config.from_object(Config)
     
@@ -49,7 +51,6 @@ def create_app():
 
     # Configura o migrations
     migrate.init_app(app, db, directory='./migrations')
-    socketio.init_app(app)
 
     # Registrar Blueprints
     app.register_blueprint(categories_controller.category_bp)
@@ -68,6 +69,11 @@ def create_app():
     app.register_blueprint(produtos_bp)
     app.register_blueprint(transmitir_bp)
     app.register_blueprint(usuarios_bp)
+
+    @socketio.on('new_message')
+    def handle_new_message(data):
+        print(f"Mensagem recebida: {data}")
+        emit('new_message', data, broadcast=True)
 
     @app.before_request
     def check_session_expiration():

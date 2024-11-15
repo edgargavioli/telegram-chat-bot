@@ -1,6 +1,15 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 import requests
+import socketio
+
+sio = socketio.Client()
+
+@sio.event
+def connect():
+    print('connection established')
+
+sio.connect('ws://127.0.0.1:5000/', transports=['polling'])
 
 from config import API_URL
 
@@ -18,15 +27,4 @@ async def updates_to_backend(update: Update, context: ContextTypes.DEFAULT_TYPE)
         "message": message
     }
 
-    requests.post(f"{API_URL}/messages/receive", json=data)
-
-    # async def updates_to_backend(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    #     data = {
-    #         "update_id": update.update_id,
-    #         "message": update.message.to_dict() if update.message else None,
-    #         "callback_query": update.callback_query.to_dict() if update.callback_query else None,
-    #         "inline_query": update.inline_query.to_dict() if update.inline_query else None,
-    #     }
-    #     response = requests.post(f"{API_URL}/updates", json=data)
-    #     if response.status_code != 200:
-    #         print(f"Failed to send update to backend: {response.status_code}")
+    sio.emit('new_message', data)

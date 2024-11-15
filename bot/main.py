@@ -33,7 +33,7 @@ async def responder_palavra_chave(update: Update, context: CallbackContext):
             modo_humano_ativo[userId] = False
             return
         customer_messages[userId] = mensagem
-        print(f"Customer message: {customer_messages}")
+        await updates_to_backend(update, context)
         return
 
     if userId in waiting_city and waiting_city[userId]:
@@ -92,8 +92,6 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("catalog", catalog_command))
     app.add_handler(CommandHandler("cart", cart_command))
     app.add_handler(CommandHandler("human", human_conversation))
-
-    app.add_handler(MessageHandler(filters.ALL, updates_to_backend))
 
     app.add_handler(CallbackQueryHandler(handle_callback_query))
 
