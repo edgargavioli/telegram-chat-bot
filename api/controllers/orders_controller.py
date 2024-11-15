@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, redirect, render_template, request, abort, url_for
 from api.models.orders import Order
 from api.models.db import db
+from api.models.clients import Client
 from functools import wraps
 from app.routes.login import current_user
 
@@ -79,6 +80,39 @@ def create_order():
         else:
             pass
     return render_template('pages/pedidos/adicionar_pedido.html')
+
+@order_bp.route('/orders/bot<int:chat_id>', methods=['POST'])
+def create_order_bot(chat_id):
+    if request.method == 'POST':
+        data = request.get_json()
+
+        created_date = data.get('created_date')
+        created_time = data.get('created_time')
+        status = data.get('status')
+        amount = data.get('amount')
+
+        client = Client.query.filter_by(chat_id=chat_id).first()
+        
+        if not client:
+            return jsonify({'message': 'Cliente não encontrado'}), 404
+
+        client_id = client.id
+
+        created_date_time = f'{created_date} {created_time}' if created_date and created_time else None
+
+        if created_date_time and status and amount and client_id:
+            new_order = Order(
+                created_date=created_date_time,
+                status=status,
+                amount=amount,
+                client_id=client_id
+            )
+            db.session.add(new_order)
+            db.session.commit()
+
+            return jsonify({'Order': new_order.to_dict()}), 200
+        else:
+            return jsonify({'message': 'Campos obrigatórios faltando'}), 400
 
 @order_bp.route('/orders/<int:id>', methods=['POST', 'PUT'])
 @login_required

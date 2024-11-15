@@ -2,8 +2,10 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from io import BytesIO
 import requests
+import json
 
-from config import API_URL, IMG_PREFIX, cart
+from config import API_URL, IMG_PREFIX, cart, waiting_address, waiting_city, waiting_number
+from datetime import datetime
 
 PRODUCT_QUANTITY_CALLBACK = "catalog=product-quantity"
 MINUS_PRODUCT_CALLBACK = "catalog=minus-product_"
@@ -50,10 +52,9 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     data = query.data
 
     if query.data == 'checkout':
-        await query.message.reply_text("Indo para o checkout...")
-        # Lógica de checkout aqui
+        waiting_city[user_id] = True 
+        await query.message.reply_text("Digite sua cidade")
     elif query.data == 'clear_cart':
-        # Limpar o carrinho do usuário
         if user_id in cart:
             cart[user_id].clear()
         await query.message.reply_text("Seu carrinho foi limpo.")
@@ -85,6 +86,65 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     
     elif query.data.startswith("catalog="):
         await handle_cart_operations(query)
+    elif query.data == "checkout_address":
+        await query.message.reply_text("Digite seu endereço de entrega:")
+        endereco = update.message.text
+    elif query.data == "confirmar":
+        print("Pedido confirmado")
+        total_amount = 0.0
+
+        for item in cart[user_id].values():
+            quantity = item['quantity']
+            price = item['price']
+            total_amount += quantity * price
+
+        order = {
+            "created_date": datetime.now().date().strftime("%Y-%m-%d"),
+            "created_time": datetime.now().strftime("%H:%M:%S"),
+            "status": "Em espera",
+            "amount": total_amount
+        }
+
+        print(order)
+
+        response = requests.post(f"{API_URL}/orders/bot{user_id}", json=order)
+
+        if response.status_code == 200:
+            print("Pedido criado com sucesso:", response.json())
+            order_response = response.json()
+            
+            # Acessando o id corretamente dentro de 'Order'
+            order_id = order_response['Order']['id']
+            print(order_id)
+            
+            if order_id:
+                for item_id, item in cart[user_id].items():
+                    print(item)
+                    order_item = {
+                        "order_id": order_id,  # Usando o id correto
+                        "product_id": item_id,
+                        "quantity": item['quantity'],
+                        "product_price": item['price'],
+                        "product_name": item['product_name']
+                    }
+                    print(order_item)
+                    
+                    # Enviando a solicitação para criar o item de pedido
+                    response = requests.post(f"{API_URL}/orders_items", json=order_item)
+                    
+                    if response.status_code == 201:
+                        print("Item de pedido criado com sucesso:", response.json())
+                    else:
+                        print(f"Erro ao criar item de pedido: {response.status_code}, {response.text}")
+            else:
+                print("Sem id na response")
+        else:
+            print(f"Erro ao criar pedido: {response.status_code}, {response.text}")
+
+
+
+    elif query.data == "cancelar":
+        await query.message.reply_text("Seu pedido foi cancelado.")
 
 async def catalog_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response = requests.get(f"{API_URL}/categories")
