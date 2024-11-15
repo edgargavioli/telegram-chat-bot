@@ -10,5 +10,14 @@ class Order(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False, unique=False)
     client = db.relationship('Client', backref='orders')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'created_date': self.created_date,
+            'status': self.status,
+            'amount': self.amount,
+            'client_id': self.client_id
+        }
+
     def __repr__(self):
         return f'<Order {self.status}>'

@@ -6,3 +6,8 @@ API_URL = "http://localhost:5000/api"
 IMG_PREFIX = "http://localhost:5000/static/img/produtos/"
 
 cart = {}
+
+waiting_city = {}
+waiting_address = {}
+waiting_number = {}
+

@@ -104,6 +104,28 @@ def update_client(id):
     else:
         pass
 
+@client_bp.route('/clients/bot<int:chat_id>', methods=['POST', 'PUT'])
+def update_client_bot(chat_id):
+    client = Client.query.filter_by(chat_id=chat_id).first()
+
+    data = request.get_json()
+
+    phone_number = data.get('phone_number')
+    city = data.get('city')
+    address = data.get('address')
+
+    if chat_id and phone_number and city and address:
+        client.chat_id
+        client.phone_number = phone_number
+        client.name
+        client.city = city
+        client.address = address
+        client.is_active = True
+        db.session.commit()
+        return jsonify({'message': 'Client updated successfully'}), 200
+    else:
+        return jsonify({'message': 'Client error'}), 404
+
 @client_bp.route('/clients/<int:id>', methods=['DELETE'])
 @login_required
 def delete_client(id):

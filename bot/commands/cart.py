@@ -39,7 +39,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
 
     if query.data == 'checkout':
-        await query.edit_message_text(text="Indo para o checkout...")
+        # await query.message.reply_text(text="Indo para o checkout...")
+        await query.message.reply_text(text="Digite seu endereço de entrega:", callback_data='checkout_address')
+
         # Lógica de checkout aqui
     elif query.data == 'clear_cart':
         # Limpar o carrinho do usuário
