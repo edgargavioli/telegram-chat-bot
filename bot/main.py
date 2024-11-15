@@ -5,12 +5,24 @@ import requests
 from commands.catalog import catalog_command
 from commands.catalog import handle_callback_query
 from commands.cart import cart_command, button
+from commands.human import human_conversation, modo_humano_ativo
 from config import TOKEN, BOT_USERNAME, API_URL
+
+customer_messages = {}
 
 async def responder_palavra_chave(update: Update, context: CallbackContext):
     mensagem = update.message.text.lower()
     palavras_chave = ["catalog"]
-    
+
+    if update.message.from_user.id in modo_humano_ativo:
+        if modo_humano_ativo[update.message.from_user.id]:
+            if mensagem == "sair":
+                modo_humano_ativo[update.message.from_user.id] = False
+                return
+            customer_messages[update.message.from_user.id] = mensagem
+            print(f"Customer message: {customer_messages}")
+            return
+
     for palavra in palavras_chave:
         if palavra in mensagem:
             if palavra == "catalog":
@@ -31,6 +43,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("catalog", catalog_command))
     app.add_handler(CommandHandler("cart", cart_command))
+    app.add_handler(CommandHandler("human", human_conversation))
 
     app.add_handler(CallbackQueryHandler(handle_callback_query))
 
