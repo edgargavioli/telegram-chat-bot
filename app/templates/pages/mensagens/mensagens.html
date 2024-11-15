@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="messages-container">
+        <aside class="contacts-sidebar">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar clientes" class="search-input" id="search-input" oninput="filterContacts()">
+                <span class="clear-icon" id="clear-icon" onclick="clearSearch()">×</span>
+            </div>
+            <ul class="contacts-list" id="contacts-list">
+            </ul>
+        </aside>
+
+        <div class="chat-area">
+            <div class="chat-header">
+                <img src="{{ url_for('static', filename='img/icons/user.svg') }}" alt="Contato" class="contact-pic" id="contact-pic" style="display: none;">
+                <span class="contact-name" id="contact-name">Mensagens</span>
+            </div>
+            <div class="messages-content">
+                <div class="messages-placeholder">Escolha um cliente para conversar...</div>
+            </div>
+            <div class="message-input-container" id="message-input-container" style="display: none;">
+                <input type="text" placeholder="Digite sua mensagem" class="message-input">
+                <button class="send-btn">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/mensagens/mensagens.js') }}" defer></script>
+
+{% endblock %}

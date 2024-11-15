@@ -5,6 +5,7 @@ from api.controllers import orders_controller
 from api.controllers import orders_items_controller
 from api.controllers import products_controller
 from api.controllers import user_controller
+from api.controllers import messages_controller
 from .routes.login import bp as login_bp
 from .routes.home import bp as home_bp
 from .routes.categorias import bp as categorias_bp
@@ -55,6 +56,7 @@ def create_app():
     app.register_blueprint(orders_items_controller.order_items_bp)
     app.register_blueprint(products_controller.product_bp)
     app.register_blueprint(user_controller.user_bp)
+    app.register_blueprint(messages_controller.messages_bp)
     app.register_blueprint(login_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(categorias_bp)
