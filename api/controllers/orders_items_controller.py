@@ -97,7 +97,6 @@ def get_order_item(id):
     })
 
 @order_items_bp.route('/orders_items', methods=['POST'])
-@login_required
 def create_order_item():
     data = request.get_json()
     new_order_item = OrderItems(
