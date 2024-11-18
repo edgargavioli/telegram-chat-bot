@@ -6,6 +6,7 @@ from api.controllers import orders_items_controller
 from api.controllers import products_controller
 from api.controllers import user_controller
 from api.controllers import messages_controller
+from api.controllers.messages_controller import receive_telegram_message
 from .routes.login import bp as login_bp
 from .routes.home import bp as home_bp
 from .routes.categorias import bp as categorias_bp
@@ -73,6 +74,7 @@ def create_app():
     @socketio.on('new_message')
     def handle_new_message(data):
         print(f"Mensagem recebida: {data}")
+        receive_telegram_message(data['chat_id'], data['message'])
         emit('new_message', data, broadcast=True)
 
     @app.before_request
