@@ -30,6 +30,7 @@ async def responder_palavra_chave(update: Update, context: CallbackContext):
 
     if userId in modo_humano_ativo and modo_humano_ativo[userId]:
         if mensagem == "sair":
+            await update.message.reply_text("Saindo do modo humano.")
             modo_humano_ativo[userId] = False
             return
         customer_messages[userId] = mensagem

@@ -5,26 +5,36 @@ const socket = io('http://localhost:5000');
 
 let mensagem = [];
 
+function loadAllMessagesFirstTime(){
+    fetch('/api/messages', {
+        method: 'GET',
+    }).then(response => {
+        return response.json();
+    }).then(messages => {
+        messages.forEach(msg => {
+            mensagem.push(msg);
+        });
+    }).catch(error => {
+        console.error(error);
+    });
+}
+
+loadAllMessagesFirstTime();
+
 socket.on('new_message', (msg_back) => {
-    // Obtém o ID do chat ativo
     let chatAtivo = document.querySelector('.contact-item.active').getAttribute('data-chat-id');
-    
-    // Adiciona a mensagem recebida no array de mensagens
+
     mensagem.push(msg_back);
     console.log(msg_back);
     console.log(chatAtivo);
     
-    // Verifica se a mensagem recebida é do chat ativo
     if (msg_back.chat_id == chatAtivo) {
-        // Cria um novo elemento de mensagem recebida
         const message = document.createElement('div');
         message.classList.add('message', 'received');
         message.textContent = msg_back.message;
         
-        // Adiciona a nova mensagem ao contêiner de mensagens
         messagesContainer.appendChild(message);
 
-        // Rola a área de mensagens para baixo (para mostrar a nova mensagem)
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 });
@@ -37,7 +47,7 @@ document.querySelector('.message-input').addEventListener('keydown', function (e
 
 sendBtn.addEventListener('click', sendMessage);
 
-function fetchMessages(chatId, messageContent) {
+function fetchMessages(chatId, messageContent, type) {
     fetch('/api/messages/send', {
         method: 'POST',
         headers: {
@@ -45,7 +55,8 @@ function fetchMessages(chatId, messageContent) {
         },
         body: JSON.stringify({
             chat_id: chatId,
-            message: messageContent
+            message: messageContent,
+            type: type
         })
     }).catch(error => {
         console.error(error);
@@ -60,7 +71,7 @@ function sendMessage() {
     if(sendBtn.classList.contains('transmitir-btn')) {
         liqeuquero.forEach(li => {
             const chatId = li.getAttribute('data-chat-id');
-            fetchMessages(chatId, messageContent);
+            fetchMessages(chatId, messageContent, 'transmitir');
         })
         const message = document.createElement('div');
         message.classList.add('message', 'sent');
@@ -74,8 +85,8 @@ function sendMessage() {
     if (messageContent) {
         const activeContact = document.querySelector('.contact-item.active');
 
-        fetchMessages(activeContact.getAttribute('data-chat-id'), messageContent);
-
+        fetchMessages(activeContact.getAttribute('data-chat-id'), messageContent, 'sent');
+        mensagem.push({chat_id: Number(activeContact.getAttribute('data-chat-id')), message: messageContent, type: 'sent'});
         const message = document.createElement('div');
         message.classList.add('message', 'sent');
         message.textContent = messageContent;
@@ -84,6 +95,7 @@ function sendMessage() {
         input.value = '';
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
+
 }
 
 function loadContacts() {
@@ -154,45 +166,11 @@ function carregarMensagens(clientId) {
             messageInputContainer.style.display = 'flex';
 
             messagesContainer.innerHTML = '';
-            const receivedMessage1 = document.createElement('div');
-            receivedMessage1.classList.add('message', 'received');
-            receivedMessage1.textContent = `address: ${client.address}`;
-            messagesContainer.appendChild(receivedMessage1);
-
-            const sentMessage1 = document.createElement('div');
-            sentMessage1.classList.add('message', 'sent');
-            sentMessage1.textContent = `chat_id: ${client.chat_id}`;
-            messagesContainer.appendChild(sentMessage1);
-
-            const receivedMessage2 = document.createElement('div');
-            receivedMessage2.classList.add('message', 'received');
-            receivedMessage2.textContent = `city: ${client.city}`;
-            messagesContainer.appendChild(receivedMessage2);
-
-            const sentMessage2 = document.createElement('div');
-            sentMessage2.classList.add('message', 'sent');
-            sentMessage2.textContent = `id: ${client.id}`;
-            messagesContainer.appendChild(sentMessage2);
-
-            const receivedMessage3 = document.createElement('div');
-            receivedMessage3.classList.add('message', 'received');
-            receivedMessage3.textContent = `is_active: ${client.is_active}`;
-            messagesContainer.appendChild(receivedMessage3);
-
-            const sentMessage3 = document.createElement('div');
-            sentMessage3.classList.add('message', 'sent');
-            sentMessage3.textContent = `name: ${client.name}`;
-            messagesContainer.appendChild(sentMessage3);
-
-            const receivedMessage4 = document.createElement('div');
-            receivedMessage4.classList.add('message', 'received');
-            receivedMessage4.textContent = `phone_number: ${client.phone_number}`;
-            messagesContainer.appendChild(receivedMessage4);
 
             mensagem.forEach(msg => {
                 if(msg.chat_id === client.chat_id) {
                     const message = document.createElement('div');
-                    message.classList.add('message', 'received');
+                    message.classList.add('message', msg.type);
                     message.textContent = msg.message;
                     messagesContainer.appendChild(message);
                 }
