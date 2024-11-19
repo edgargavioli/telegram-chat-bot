@@ -91,7 +91,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         order = {
             "created_date": datetime.now().date().strftime("%Y-%m-%d"),
             "created_time": datetime.now().strftime("%H:%M:%S"),
-            "status": "Em espera",
+            "status": "Espera",
             "amount": total_amount
         }
 
@@ -121,9 +121,9 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     
                     # Enviando a solicitação para criar o item de pedido
                     response = requests.post(f"{API_URL}/orders_items", json=order_item)
-                    
                     if response.status_code == 201:
                         print("Item de pedido criado com sucesso:", response.json())
+                        await query.message.reply_text("Pedido confirmado com sucesso!")
                     else:
                         print(f"Erro ao criar item de pedido: {response.status_code}, {response.text}")
             else:
@@ -134,7 +134,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 
 
     elif query.data == "cancelar":
-        await query.message.reply_text("Seu pedido foi cancelado.")
+        if user_id in cart:
+            cart[user_id].clear()
+            await query.message.reply_text("Seu carrinho foi limpo.")
+            await query.message.reply_text("Seu pedido foi cancelado.")
 
 async def catalog_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response = requests.get(f"{API_URL}/categories")
