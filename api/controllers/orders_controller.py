@@ -164,13 +164,6 @@ def update_order_status(id):
     if not order:
         return jsonify({"error": "Order not found"}), 404
     order.status = new_status
-    if new_status == "Concluído":
-        order_items = OrderItems.query.filter_by(order_id=order.id).all()
-        for item in order_items:
-            db.session.delete(item)
-        db.session.delete(order)
-        db.session.commit()
-        return jsonify({"message": "Order completed and deleted successfully"}), 200
     db.session.commit()
     return jsonify({"message": "Order status updated successfully"}), 200
 

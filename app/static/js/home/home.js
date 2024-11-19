@@ -66,6 +66,8 @@ async function loadOrders() {
         });
 
         orders.forEach(order => {
+            if (order.status === "Concluído") return;
+
             const mappedStatus = statusMap[order.status];
             if (!mappedStatus) return;
         

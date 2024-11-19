@@ -41,10 +41,11 @@ async function loadOrders() {
         const deleteIconUrl = `${window.location.origin}/static/img/excluir.png`;
 
         orders.forEach(order => {
+            if (order.status === "Concluído") return;
+
             const row = document.createElement('tr');
             
             const formattedDate = formatDate(order.created_date);
-
             const formattedAmount = Number(order.amount).toFixed(2);
 
             row.innerHTML = `
@@ -55,7 +56,7 @@ async function loadOrders() {
                 <td>R$ ${formattedAmount}</td>
                 <td>
                     <a onclick="window.location.href='${window.location.origin}/pedidos/editar/${order.id}'"><img src="${editIconUrl}" alt="Editar" class="action-pic"></a>
-                    <a onclick="deleteOrder(${order.id})"><img src="${deleteIconUrl}" alt="Excluir" class="action-pic"></a>
+                    ${order.status !== "Concluído" ? `<a onclick="deleteOrder(${order.id})"><img src="${deleteIconUrl}" alt="Excluir" class="action-pic"></a>` : ''}
                 </td>
             `;
             tableBody.appendChild(row);
