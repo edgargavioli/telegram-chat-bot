@@ -26,6 +26,7 @@
                     <option value="Pronto" {% if order.status == 'Pronto' %}selected{% endif %}>Pronto</option>
                     <option value="Entrega" {% if order.status == 'Entrega' %}selected{% endif %}>Saiu para Entrega</option>
                     <option value="Cancelado" {% if order.status == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+                    <option value="Concluído" {% if order.status == 'Concluído' %}selected{% endif %}>Concluído</option>
                 </select>
             </div>
 
@@ -35,11 +36,37 @@
             </div>
 
             <div class="form-field">
-                <label for="client_id">Cliente:</label>
+                <label for="client_id">
+                    Cliente (<a id="view-client-link" href="#" target="_blank" style="display: none;">Ver</a>): 
+                    
+                </label>
                 <select id="client_id" name="client_id" required class="login-input" data-selected-client="{{ order.client_id }}">
                     <option value="">Carregando clientes...</option>
                 </select>
-            </div>
+            </div>       
+            
+            <div class="form-field">
+                <label for="products">Produtos:</label>
+                <div id="products-container">
+                    {% for item in order.orders_items %}
+                        <div class="product-item">
+                            <select name="products[]" class="product-select" required>
+                                <option value="" disabled selected>Selecione um produto</option>
+                                {% for product in all_products %}
+                                    <option value="{{ product.id }}" 
+                                            data-price="{{ product.price }}"
+                                            {% if product.id == item.product_id %}selected{% endif %}>
+                                        {{ product.name }} - R$ {{ product.price }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <input type="number" name="quantities[]" placeholder="Quantidade" value="{{ item.quantity }}" min="1" class="quantity-input" required>
+                            <button type="button" class="remove-product-btn" onclick="">Remover</button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="add-product-btn">+</button>
+            </div>            
 
             <div class="form-actions">
                 <button type="submit" class="login-btn">Salvar Alterações</button>

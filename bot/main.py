@@ -7,7 +7,6 @@ from commands.catalog import catalog_command
 from commands.catalog import handle_callback_query
 from commands.cart import cart_command, button
 from commands.send_backend_message import updates_to_backend
-from config import TOKEN, BOT_USERNAME, API_URL
 from commands.human import human_conversation, modo_humano_ativo
 from config import TOKEN, BOT_USERNAME, API_URL, waiting_address, waiting_number, waiting_city
 

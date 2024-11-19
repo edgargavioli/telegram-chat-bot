@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="kanban-container">
+        <h1>Gerenciador de Pedidos</h1>
+        <div class="kanban-board" id="kanban-board">
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/home/home.js') }}" defer></script>
+{% endblock %}
