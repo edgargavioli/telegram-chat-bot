@@ -4,20 +4,29 @@
 Abaixo está a estrutura do projeto, com uma explicação de cada diretório e arquivo principal:
 
 ### Descrição dos Diretórios e Arquivos:
-- **`app/`**: Contém todo o código relacionado à aplicação Flask.
-  - **`__init__.py`**: Arquivo que inicializa a aplicação, registrando as rotas, extensões e configurando o app.
-  - **`models.py`**: Contém os modelos do banco de dados (usando SQLAlchemy, por exemplo).
-  - **`routes/`**: Diretório para organizar as rotas/endpoints da aplicação.
-    - **`user.py`**: Exemplo de arquivo de rotas relacionado a usuários.
-  - **`services/`**: Lógica de negócio e funções que interagem com os modelos.
-    - **`user_service.py`**: Exemplo de serviço de usuários.
-  - **`templates/`**: Arquivos HTML utilizados para renderização no Flask (separação entre backend e frontend).
-    - **`base.html`**: Template base que pode ser herdado por outros templates.
-  - **`static/`**: Contém arquivos estáticos como CSS, imagens e JavaScript.
-    - **`style.css`**: Exemplo de arquivo CSS para estilização.
-    - **`script.js`**: Exemplo de arquivo JavaScript.
-  - **`forms.py`**: Contém os formulários da aplicação (caso use Flask-WTF).
-  - **`config.py`**: Arquivo com configurações da aplicação (como variáveis de ambiente).
+**`telegram-chat-bot/`**
+├──**` app/`**
+│   ├──**` __init__.py  `**        # Inicializa o aplicativo Flask e configurações gerais
+│   ├──**` models.py   `**         # Modelos do banco de dados (ex.: SQLAlchemy)
+│   ├── **`routes/   `**           # Diretório para rotas/endpoints
+│   │   └──**` user.py  `**        # Exemplo de rota para gerenciamento de usuários
+│   ├── **`services/   `**         # Lógica de negócio e interação com os modelos
+│   │   └──**` user_service.py `** # Exemplo de serviço para usuários
+│   ├──**` templates/ `**          # Arquivos HTML para renderização
+│   │   └── **`base.html   `**     # Template base reutilizável
+│   ├──**` static/ `**             # Arquivos estáticos (CSS, JS, imagens)
+│   │   ├──**` style.css `**       # Estilização
+│   │   └── **`script.js   `**     # Lógica frontend
+│   ├──**` forms.py`**             # Formulários (opcional, ex.: Flask-WTF)
+│   └──**` config.py`**            # Configurações do aplicativo (ex.: variáveis de ambiente)
+├── **`migrations/ `**             # Controla as migrações do banco de dados (Flask-Migrate)
+├──**` tests/ `**                  # Testes unitários e de integração
+├──**` venv/  `**                 # Ambiente virtual (não versionado)
+├──**` .env `**                    # Variáveis de ambiente (não versionado)
+├──**` .gitignore`**               # Arquivos/diretórios ignorados pelo Git
+├──**` README.md `**               # Documentação do projeto
+├── **`requirements.txt`**           # Lista de dependências do projeto
+└── **`run.py`**                   # Ponto de entrada da aplicação
 
 - **`migrations/`**: Controla as migrações de banco de dados, permitindo modificar a estrutura do banco de forma controlada (usando Flask-Migrate).
 
@@ -40,26 +49,43 @@ Abaixo está a estrutura do projeto, com uma explicação de cada diretório e a
 
 ### Passos para iniciar o projeto localmente:
 
-1. **Clone o repositório**:
+1. **Clonar o repositório**:
    ```bash
    git clone https://github.com/edgargavioli/telegram-chat-bot.git
    cd telegram-chat-bot
-2. **Crie um ambiente virtual .venv**:
+2. **Crie e Ativar o Ambiente Virtual**:
    ```bash
+   Windows:
    python3 -m venv .venv
    .venv\Scripts\activate
+   Linux/Mac:
+   python3 -m venv .venv
+   source .venv/bin/activate
+   
 3. **Delete a pasta venv**
+  
 4. **Instale as dependências**:
    ```bash
    pip install -r requirements.txt
 5. **Execute a aplicação**:
    ```bash
    flask run
-6. **Para executar a aplicação em debug mode(hotreload)**:
+6. **Modo Debug(Hot Reload)**:
   ```bash
+  Windows (PowerShell):
   $env:FLASK_DEBUG = "1" //utilizar comando no vscode usando powershell
-  // --------------------------
-  // Linux e Mac
+  flask run
+
+  Linux e Mac
   $ export FLASK_APP=run.py
   $ export FLASK_DEBUG=1
+  flask run
+
+Testando o Projeto:
+
 Acesse http://localhost:5000/users/greet para ver a página exemplo desse projeto.
+
+Observações:
+
+-Certifique-se de que o arquivo .env está configurado corretamente com as credenciais e chaves secretas necessárias.
+-Não versione os diretórios venv/ e arquivos sensíveis como .env. Use o .gitignore para garantir isso.
