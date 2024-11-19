@@ -499,7 +499,7 @@
     font-size: 18px;
     color: #888;
     position: absolute;
-    right: 20px;
+    right: 75px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -521,6 +521,8 @@
     display: flex;
     width: 50px;
     cursor: pointer;
+    margin-left: 10px;
+    margin-top: 5px;
 }
 
 .transmite-div a {
@@ -660,4 +662,35 @@
     align-items: center;
     height: 100%;
     color: #777;
+}
+
+.searchbar-pic {
+    width: 25px;
+    height: 25px;
+}
+
+.product-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.product-item .remove-product-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#add-product-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 4%;
+    border-radius: 4px;
+    align-self: center;
 }
