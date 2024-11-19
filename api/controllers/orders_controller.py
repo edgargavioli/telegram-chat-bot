@@ -153,6 +153,27 @@ def update_order(id):
         db.session.commit()
     return redirect(url_for('pedidos.pedidos'))
 
+@order_bp.route('/orders/status/<int:id>', methods=['POST'])
+@login_required
+def update_order_status(id):
+    data = request.json
+    new_status = data.get('status')
+    if not new_status:
+        return jsonify({"error": "Status is required"}), 400
+    order = Order.query.get(id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+    order.status = new_status
+    if new_status == "Concluído":
+        order_items = OrderItems.query.filter_by(order_id=order.id).all()
+        for item in order_items:
+            db.session.delete(item)
+        db.session.delete(order)
+        db.session.commit()
+        return jsonify({"message": "Order completed and deleted successfully"}), 200
+    db.session.commit()
+    return jsonify({"message": "Order status updated successfully"}), 200
+
 @order_bp.route('/orders/<int:id>', methods=['DELETE'])
 @login_required
 def delete_order(id):
