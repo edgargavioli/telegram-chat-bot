@@ -137,7 +137,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         if user_id in cart:
             cart[user_id].clear()
             await query.message.reply_text("Seu carrinho foi limpo.")
-            await query.message.reply_text("Seu pedido foi cancelado.")
+        await query.message.reply_text("Seu pedido foi cancelado.")
 
 async def catalog_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response = requests.get(f"{API_URL}/categories")
