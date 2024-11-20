@@ -5,6 +5,8 @@ from flask import Blueprint, jsonify, request
 from app.routes.login import current_user
 from api.models.db import db
 from api.models.messages import Messages
+from api.models.orders import Order
+from api.models.clients import Client
 
 messages_bp = Blueprint('messages', __name__, url_prefix='/api')
 
@@ -26,6 +28,33 @@ def get_messages():
         'message': message.message,
         'type': message.type
     }for message in messages])
+
+@messages_bp.route('/messages/attStatus', methods=['POST'])
+@login_required
+def att_status():
+    data = request.get_json()
+
+    token = os.getenv('TELEGRAM_TOKEN')
+    
+    order_id = data.get('order_id')
+    status = data.get('status')
+
+    client_id = Order.query.filter(Order.id == order_id).first().client_id
+
+    chat_id = Client.query.filter(Client.id == client_id).first().chat_id
+
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+
+    payload = {
+        'chat_id': chat_id,
+        'text': f"Seu pedido {order_id} foi atualizado para {status}"
+    }
+
+    try:
+        requests.post(url, data=payload)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+    return jsonify({'message': 'Status updated'}), 200
 
 @messages_bp.route('/messages/send', methods=['POST'])
 @login_required

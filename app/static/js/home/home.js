@@ -159,6 +159,19 @@ async function drop(event) {
         const orderId = itemId.replace("order-", "");
 
         try {
+
+            fetch('/api/messages/attStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({order_id: orderId, status: statusToSave}),
+            }).then((response) => {
+                response.json().then((data) => {
+                    console.log(data);
+                });
+            });
+
             const response = await fetch(`/api/orders/status/${orderId}`, {
                 method: "POST",
                 headers: {
