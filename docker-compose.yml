@@ -12,6 +12,8 @@ services:
   bot:
     build: ./bot
     command: sh -c "./wait-for-it.sh web:5000 -- python main.py"
+    environment:
+      - PYTHONUNBUFFERED=1
     depends_on:
       - web
     volumes:
