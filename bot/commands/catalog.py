@@ -111,7 +111,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                 for item_id, item in cart[user_id].items():
                     print(item)
                     order_item = {
-                        "order_id": order_id,  # Usando o id correto
+                        "order_id": order_id, 
                         "product_id": item_id,
                         "quantity": item['quantity'],
                         "product_price": item['price'],
@@ -119,11 +119,11 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     }
                     print(order_item)
                     
-                    # Enviando a solicitação para criar o item de pedido
                     response = requests.post(f"{API_URL}/orders_items", json=order_item)
+                    response_data = response.json()
                     if response.status_code == 201:
                         print("Item de pedido criado com sucesso:", response.json())
-                        await query.message.reply_text("Pedido confirmado com sucesso!")
+                        await query.message.edit_text(f"Pedido de número {response_data['id']} confirmado com sucesso!")
                     else:
                         print(f"Erro ao criar item de pedido: {response.status_code}, {response.text}")
             else:
