@@ -17,11 +17,6 @@ async def updates_to_backend(update: Update, context: ContextTypes.DEFAULT_TYPE)
     name = update.message.from_user.first_name
     chat_id = update.message.chat.id
     message = update.message.text
-
-    client_exists = requests.get(f"{API_URL}/clients/bot{chat_id}")
-
-    if client_exists.status_code != 200:
-        return
     
     data = {
         "chat_id": chat_id,
