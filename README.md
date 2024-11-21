@@ -5,28 +5,51 @@ Abaixo está a estrutura do projeto, com uma explicação de cada diretório e a
 
 ### Descrição dos Diretórios e Arquivos:
 **`telegram-chat-bot/`**
+
 ├──**` app/`**
+
 │   ├──**` __init__.py  `**        # Inicializa o aplicativo Flask e configurações gerais
+
 │   ├──**` models.py   `**         # Modelos do banco de dados (ex.: SQLAlchemy)
+
 │   ├── **`routes/   `**           # Diretório para rotas/endpoints
+
 │   │   └──**` user.py  `**        # Exemplo de rota para gerenciamento de usuários
+
 │   ├── **`services/   `**         # Lógica de negócio e interação com os modelos
+
 │   │   └──**` user_service.py `** # Exemplo de serviço para usuários
+
 │   ├──**` templates/ `**          # Arquivos HTML para renderização
+
 │   │   └── **`base.html   `**     # Template base reutilizável
+
 │   ├──**` static/ `**             # Arquivos estáticos (CSS, JS, imagens)
+
 │   │   ├──**` style.css `**       # Estilização
+
 │   │   └── **`script.js   `**     # Lógica frontend
+
 │   ├──**` forms.py`**             # Formulários (opcional, ex.: Flask-WTF)
+
 │   └──**` config.py`**            # Configurações do aplicativo (ex.: variáveis de ambiente)
+
 ├── **`migrations/ `**             # Controla as migrações do banco de dados (Flask-Migrate)
+
 ├──**` tests/ `**                  # Testes unitários e de integração
+
 ├──**` venv/  `**                 # Ambiente virtual (não versionado)
+
 ├──**` .env `**                    # Variáveis de ambiente (não versionado)
+
 ├──**` .gitignore`**               # Arquivos/diretórios ignorados pelo Git
+
 ├──**` README.md `**               # Documentação do projeto
+
 ├── **`requirements.txt`**           # Lista de dependências do projeto
+
 └── **`run.py`**                   # Ponto de entrada da aplicação
+
 
 - **`migrations/`**: Controla as migrações de banco de dados, permitindo modificar a estrutura do banco de forma controlada (usando Flask-Migrate).
 
@@ -71,6 +94,7 @@ Abaixo está a estrutura do projeto, com uma explicação de cada diretório e a
    ```bash
    flask run
 6. **Modo Debug(Hot Reload)**:
+
   ```bash
   Windows (PowerShell):
   $env:FLASK_DEBUG = "1" //utilizar comando no vscode usando powershell
@@ -81,7 +105,8 @@ Abaixo está a estrutura do projeto, com uma explicação de cada diretório e a
   $ export FLASK_DEBUG=1
   flask run
 
-Testando o Projeto:
+
+7. **Testando o Projeto**:
 
 Acesse http://localhost:5000/users/greet para ver a página exemplo desse projeto.
 
