@@ -1,30 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:5000');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const mensagensLink = document.querySelector('a[href="/mensagens/"]'); // Seleciona o link para /mensagens
+            const mensagensSpan = document.getElementById('mensagens-notificacao'); // Seleciona o span do texto
+
+            socket.on('new_message', (msg_back) => {
+
+                if (window.location.pathname === '/mensagens/') {
+                    return;
+                }
+
+                mensagensSpan.classList.add('new_message');
+
+                Toastify({
+                    text: `${msg_back.name}:\n${msg_back.message}`,
+                    duration: 5000,
+                    newWindow: true,
+                    gravity: 'bottom',
+                    position: 'right',
+                    backgroundColor: '#f1f0ff',
+                    style: {
+                        color: '#2f2f2f',
+                        width: '150px',
+                    },
+                    stopOnFocus: true,
+                }).showToast();
+            });
+
+            mensagensLink.addEventListener('click', () => {
+                mensagensSpan.classList.remove('new_message');
+            });
+
+            window.addEventListener('popstate', () => {
+                if (window.location.pathname === '/mensagens/') {
+                    mensagensSpan.classList.remove('new_message');
+                }
+            });
+        });
+
+    </script>
 </head>
+
 <body>
     <div class="container">
         <aside class="sidebar">
             <div class="toggle-btn" onclick="toggleSidebar()">
-                <img id="close-sidebar" class="seta-direita" src="{{ url_for('static', filename='img/icons/menu-close.svg') }}" alt=""/>
-                <img id="open-sidebar" class="hidden seta-esquerda" src="{{ url_for('static', filename='img/icons/menu-close.svg') }}" alt=""/>
+                <img id="close-sidebar" class="seta-direita"
+                    src="{{ url_for('static', filename='img/icons/menu-close.svg') }}" alt="" />
+                <img id="open-sidebar" class="hidden seta-esquerda"
+                    src="{{ url_for('static', filename='img/icons/menu-close.svg') }}" alt="" />
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="/clientes/"><img src="{{ url_for('static', filename='img/icons/clients.svg') }}" alt="Clientes" class="sidebar-pic"><span>Clientes</span></a></li>
-                    <li><a href="/categorias/"><img src="{{ url_for('static', filename='img/icons/category.svg') }}" alt="Categorias" class="sidebar-pic"><span>Categorias</span></a></li>
-                    <li><a href="/produtos/"><img src="{{ url_for('static', filename='img/icons/product.svg') }}" alt="Produtos" class="sidebar-pic"><span>Produtos</span></a></li>
-                    <li><a href="/pedidos/"><img src="{{ url_for('static', filename='img/icons/orders.svg') }}" alt="Pedidos" class="sidebar-pic"><span>Pedidos</span></a></li>
-                    <li><a href="/mensagens/"><img src="{{ url_for('static', filename='img/icons/message.svg') }}" alt="Mensagens" class="sidebar-pic"><span>Mensagens</span></a></li>
-                    <li><a href="/usuarios/"><img src="{{ url_for('static', filename='img/icons/users.svg') }}" alt="Usuários" class="sidebar-pic"><span>Usuários</span></a></li>
+                    <li><a href="/clientes/"><img src="{{ url_for('static', filename='img/icons/clients.svg') }}"
+                                alt="Clientes" class="sidebar-pic"><span>Clientes</span></a></li>
+                    <li><a href="/categorias/"><img src="{{ url_for('static', filename='img/icons/category.svg') }}"
+                                alt="Categorias" class="sidebar-pic"><span>Categorias</span></a></li>
+                    <li><a href="/produtos/"><img src="{{ url_for('static', filename='img/icons/product.svg') }}"
+                                alt="Produtos" class="sidebar-pic"><span>Produtos</span></a></li>
+                    <li><a href="/pedidos/"><img src="{{ url_for('static', filename='img/icons/orders.svg') }}"
+                                alt="Pedidos" class="sidebar-pic"><span>Pedidos</span></a></li>
+                    <li><a href="/mensagens/"><img src="{{ url_for('static', filename='img/icons/message.svg') }}"
+                                alt="Mensagens" class="sidebar-pic"><span id="mensagens-notificacao">Mensagens</span></a></li>
+                    <li><a href="/usuarios/"><img src="{{ url_for('static', filename='img/icons/users.svg') }}"
+                                alt="Usuários" class="sidebar-pic"><span>Usuários</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -34,15 +90,17 @@
                 <div class="navbar-logo"><a href="/home/">Admin Panel</a></div>
                 <div class="navbar-user">
                     <span>{{ username }}</span>
-                    <img src="{{ url_for('static', filename='img/icons/user.svg') }}" alt="Foto do perfil" class="profile-pic">
+                    <img src="{{ url_for('static', filename='img/icons/user.svg') }}" alt="Foto do perfil"
+                        class="profile-pic">
                     <a href="/logout" class="logout-btn">Logout</a>
                 </div>
             </header>
-            
+
             <section class="page-content">
                 {% block content %}{% endblock %}
             </section>
         </main>
     </div>
 </body>
+
 </html>

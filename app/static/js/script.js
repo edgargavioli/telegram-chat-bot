@@ -1,3 +1,4 @@
+
 function toggleSidebar() {
     const openIcon = document.querySelector("#open-sidebar");
     const closeIcon = document.querySelector("#close-sidebar");
