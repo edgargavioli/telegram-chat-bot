@@ -17,20 +17,10 @@ OPEN_CART_CALLBACK = "catalog=open-cart"
 def build_keyboard(product, cart_item=None):
     keyboard = []
 
-    if cart_item:
-        keyboard.append([
-            InlineKeyboardButton(text='➖', callback_data=f'{MINUS_PRODUCT_CALLBACK}{product["id"]}'),
-            InlineKeyboardButton(text=f'{cart_item["quantity"]} pcs.', callback_data=PRODUCT_QUANTITY_CALLBACK),
-            InlineKeyboardButton(text='➕', callback_data=f'{PLUS_PRODUCT_CALLBACK}{product["id"]}')
-        ])
-        keyboard.append([
-            InlineKeyboardButton(text="Catálogo", callback_data=OPEN_CATALOG_CALLBACK),
-            InlineKeyboardButton(text="Carrinho", callback_data=OPEN_CART_CALLBACK)
-        ])
-    else:
-        keyboard.append([
-            InlineKeyboardButton(text=f'💵 Preço: {product["price"]} $ 🛍 Adicionar ao carrinho', callback_data=f'{PLUS_PRODUCT_CALLBACK}{product["id"]}')
-        ])
+    keyboard.append([
+        InlineKeyboardButton(text='➖', callback_data=f'{MINUS_PRODUCT_CALLBACK}{product["id"]}'),
+        InlineKeyboardButton(text='➕', callback_data=f'{PLUS_PRODUCT_CALLBACK}{product["id"]}')
+    ])
 
     return InlineKeyboardMarkup(keyboard)
 
@@ -101,7 +91,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         order = {
             "created_date": datetime.now().date().strftime("%Y-%m-%d"),
             "created_time": datetime.now().strftime("%H:%M:%S"),
-            "status": "Em espera",
+            "status": "Espera",
             "amount": total_amount
         }
 
@@ -121,7 +111,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                 for item_id, item in cart[user_id].items():
                     print(item)
                     order_item = {
-                        "order_id": order_id,  # Usando o id correto
+                        "order_id": order_id, 
                         "product_id": item_id,
                         "quantity": item['quantity'],
                         "product_price": item['price'],
@@ -129,11 +119,11 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     }
                     print(order_item)
                     
-                    # Enviando a solicitação para criar o item de pedido
                     response = requests.post(f"{API_URL}/orders_items", json=order_item)
-                    
+                    response_data = response.json()
                     if response.status_code == 201:
                         print("Item de pedido criado com sucesso:", response.json())
+                        await query.message.edit_text(f"Pedido de número {response_data['id']} confirmado com sucesso!")
                     else:
                         print(f"Erro ao criar item de pedido: {response.status_code}, {response.text}")
             else:
@@ -144,6 +134,9 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 
 
     elif query.data == "cancelar":
+        if user_id in cart:
+            cart[user_id].clear()
+            await query.message.reply_text("Seu carrinho foi limpo.")
         await query.message.reply_text("Seu pedido foi cancelado.")
 
 async def catalog_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -171,11 +164,18 @@ async def handle_cart_operations(query):
     if data.startswith(MINUS_PRODUCT_CALLBACK):
         product_id = data.split('_')[1]
         if product_id in cart[chat_id]:
+            product_name = cart[chat_id][product_id]['product_name']
             if cart[chat_id][product_id]['quantity'] > 1:
                 cart[chat_id][product_id]['quantity'] -= 1
+                await query.message.reply_text(
+                    f"Uma unidade do produto {product_name} foi removida do carrinho. Quantidade atual: {cart[chat_id][product_id]['quantity']}"
+                )
             else:
+                # Envia a mensagem antes de deletar o produto
+                await query.message.reply_text(
+                    f"Produto {product_name} removido do carrinho. Quantidade atual: 0"
+                )
                 del cart[chat_id][product_id]
-        await query.answer(f"Product {product_id} decreased.")
     elif data.startswith(PLUS_PRODUCT_CALLBACK):
         product_id = data.split('_')[1]
         product_name = query.message.text.split('\n')[0]

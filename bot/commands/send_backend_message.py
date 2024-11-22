@@ -9,7 +9,7 @@ sio = socketio.Client()
 def connect():
     print('connection established')
 
-sio.connect('ws://127.0.0.1:5000/', transports=['polling'])
+sio.connect('ws://web:5000/', transports=['polling'])
 
 from config import API_URL
 
