@@ -1,8 +1,6 @@
 const messagesContainer = document.querySelector('.messages-content');
 const sendBtn = document.querySelector('.send-btn');
 
-const socket = io('http://localhost:5000');
-
 let mensagem = [];
 
 function loadAllMessagesFirstTime(){
@@ -22,22 +20,29 @@ function loadAllMessagesFirstTime(){
 loadAllMessagesFirstTime();
 
 socket.on('new_message', (msg_back) => {
-    let chatAtivo = document.querySelector('.contact-item.active').getAttribute('data-chat-id');
+    const chatAtivo = document.querySelector('.contact-item.active')?.getAttribute('data-chat-id');
 
     mensagem.push(msg_back);
-    console.log(msg_back);
-    console.log(chatAtivo);
-    
+
     if (msg_back.chat_id == chatAtivo) {
         const message = document.createElement('div');
         message.classList.add('message', 'received');
         message.textContent = msg_back.message;
-        
-        messagesContainer.appendChild(message);
 
+        messagesContainer.appendChild(message);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    } else {
+        const contactItem = document.querySelector(`.contact-item[data-chat-id="${msg_back.chat_id}"]`);
+
+        if (contactItem) {
+            const lastMessageElem = contactItem.querySelector('.last-message');
+            lastMessageElem.textContent = msg_back.message;
+
+            contactItem.classList.add('new_message');
+        }
     }
 });
+
 
 document.querySelector('.message-input').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
@@ -87,6 +92,10 @@ function sendMessage() {
 
         fetchMessages(activeContact.getAttribute('data-chat-id'), messageContent, 'sent');
         mensagem.push({chat_id: Number(activeContact.getAttribute('data-chat-id')), message: messageContent, type: 'sent'});
+
+        const lastMessageElem = activeContact.querySelector('.last-message');
+        lastMessageElem.textContent = messageContent;
+
         const message = document.createElement('div');
         message.classList.add('message', 'sent');
         message.textContent = messageContent;
@@ -96,6 +105,16 @@ function sendMessage() {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
+}
+
+function lastMessageChatId(chat_id){
+    let lastMessage = '';
+    mensagem.forEach(msg => {
+        if(msg.chat_id === chat_id) {
+            lastMessage = msg.message;
+        }
+    });
+    return lastMessage;
 }
 
 function loadContacts() {
@@ -126,7 +145,7 @@ function loadContacts() {
                     <img src="/static/img/icons/user.svg" alt="${client.name}" class="contact-pic">
                     <div class="contact-info">
                         <span class="contact-name">${client.name}</span>
-                        <span class="last-message">Última mensagem...</span>
+                        <span class="last-message">${lastMessageChatId(client.chat_id)}</span>
                     </div>
                 `;
 
@@ -167,14 +186,26 @@ function carregarMensagens(clientId) {
 
             messagesContainer.innerHTML = '';
 
+            let lastMessage = '';
+
             mensagem.forEach(msg => {
                 if(msg.chat_id === client.chat_id) {
                     const message = document.createElement('div');
                     message.classList.add('message', msg.type);
                     message.textContent = msg.message;
                     messagesContainer.appendChild(message);
+
+                    lastMessage = msg.message;
                 }
             });
+
+            const contactItem = document.querySelector(`.contact-item[data-chat-id="${client.chat_id}"]`);
+            const lastMessageElem = contactItem.querySelector('.last-message');
+            lastMessageElem.textContent = lastMessage;
+
+            if (contactItem) {
+                contactItem.classList.remove('new_message');
+            }
 
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         })
