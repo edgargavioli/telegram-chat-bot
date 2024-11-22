@@ -35,9 +35,6 @@ async def responder_palavra_chave(update: Update, context: CallbackContext):
         customer_messages[userId] = mensagem
         await updates_to_backend(update, context)
         return
-    
-
-    
 
     if userId in waiting_city and waiting_city[userId]:
         waiting_city[userId] = False
