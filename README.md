@@ -1,175 +1,198 @@
-**TELEGRAM CHAT BOT**
+# **Telegram Chat Bot**
 
-**Estrutura de Diretórios**
--Abaixo está a estrutura do projeto, com uma explicação de cada diretório e arquivo principal:
+## **Estrutura de Diretórios**
 
--Descrição dos Diretórios e Arquivos:
+O projeto de **Telegram Chat Bot** segue a estrutura abaixo para organizar os arquivos de forma modular, facilitando o desenvolvimento e manutenção.
 
-**telegram-chat-bot**
+```
+telegram-chat-bot/
+├── api/                        # Controladores e modelos da API
+│   ├── controllers/            # Controladores da API
+│   │   ├── categories_controller.py  # Controlador para categorias
+│   │   ├── clients_controller.py    # Controlador para clientes
+│   │   ├── orders_controller.py     # Controlador para pedidos
+│   │   ├── orders_items_controller.py # Controlador para itens de pedidos
+│   │   ├── products_controller.py   # Controlador para produtos
+│   │   ├── user_controller.py       # Controlador para usuários
+│   │   └── messages_controller.py   # Controlador para mensagens
+│   └── models/                  # Modelos do banco de dados
+│       └── categories.py        # Modelo de categorias
+│       └── clients.py           # Modelo de clientes
+│       └── db.py                # Instancia do SQLAlchemy
+│       └── messages.py          # Modelo de mensagens
+│       └── order_items.py       # Modelo de Produtos e Pedidos
+│       └── orders.py            # Modelo de Pedidos
+│       └── products.py          # Modelo de Produtos
+│       └── users.py             # Modelo de Usuários
+├── app/                         # Aplicação Flask (configurações, rotas, serviços)
+│   ├── __init__.py              # Inicializa o aplicativo Flask
+│   ├── config.py                # Configurações gerais do aplicativo
+│   ├── forms.py                 # Formulários (opcional, ex.: Flask-WTF)
+│   ├── routes/                  # Rotas/endpoints da aplicação
+│   ├── services/                # Lógica de negócios (interação com modelos)
+│   ├── static/                  # Arquivos estáticos (CSS, JS, imagens)
+│   └── templates/               # Templates HTML para renderização
+├── bot/                         # Lógica do bot do Telegram
+│   ├── commands/                # Comandos do bot
+│   │   └── <command_files>.py   # Definições de comandos para o bot
+│   ├── config.py                # Configurações específicas do bot
+│   ├── Dockerfile               # Arquivo Docker para o bot
+│   ├── main.py                  # Arquivo principal que inicia o bot
+│   ├── requirements.txt         # Dependências do bot
+│   └── wait-for-it.sh           # Script para esperar por serviços dependentes
+├── instance/                    # Arquivos específicos da instância (ex.: banco de dados SQLite)
+├── migrations/                  # Migrações do banco de dados (Flask-Migrate)
+│   ├── alembic.ini              # Arquivo de configuração do Alembic
+│   ├── env.py                   # Configuração do ambiente de migração
+│   ├── README                   # Documentação das migrações
+│   ├── script.py.mako           # Template para scripts de migração
+│   └── versions/                # Versões das migrações
+├── tests/                       # Testes unitários e de integração
+│   ├── __init__.py              # Inicializa o pacote de testes
+│   └── test_user.py             # Exemplo de teste para a funcionalidade de usuários
+├── .env                         # Variáveis de ambiente (ex.: credenciais e chaves secretas)
+├── .gitignore                   # Arquivos/diretórios a serem ignorados pelo Git (ex. venv/, .env)
+├── docker-compose.yml           # Arquivo Docker Compose para orquestração de containers
+├── Dockerfile                   # Arquivo Docker para a aplicação
+├── init.sql                     # Script SQL para inicializar o banco de dados
+├── main.py                      # Ponto de entrada da aplicação
+├── README.md                    # Documentação do projeto
+└── requirements.txt             # Lista de dependências do projeto
+```
+## **Como Configurar o Ambiente de Desenvolvimento**
 
-├──**app**
+### **Passos para Iniciar o Projeto Localmente**
 
-│   ├──**` __init__.py `**        # Inicializa o aplicativo Flask e configurações gerais
-
-│   ├──**` models.py   `**         # Modelos do banco de dados (ex.: SQLAlchemy)
-
-│   ├── **`routes`**           # Diretório para rotas/endpoints
-
-│   │   └──**` user.py  `**        # Exemplo de rota para gerenciamento de usuários
-
-│   ├── **`services`**         # Lógica de negócio e interação com os modelos
-
-│   │   └──**`user_service.py `** # Exemplo de serviço para usuários
-
-│   ├──**`templates`**          # Arquivos HTML para renderização
-
-│   │   └── **`base.html`**     # Template base reutilizável
-
-│   ├──**static`**             # Arquivos estáticos (CSS, JS, imagens)
-
-│   │   ├──**` style.css`**       # Estilização
-
-│   │   └── **`script.js`**     # Lógica frontend
-
-│   ├──**`forms.py`**             # Formulários (opcional, ex.: Flask-WTF)
-
-│   └──**` config.py`**            # Configurações do aplicativo (ex.: variáveis de ambiente)
-
-├── **`migrations`**             # Controla as migrações do banco de dados (Flask-Migrate)
-
-├──**` tests`**                  # Testes unitários e de integração
-
-├──**`venv`**                 # Ambiente virtual (não versionado)
-
-├──**`.env`**                    # Variáveis de ambiente (não versionado)
-
-├──**`.gitignore`**               # Arquivos/diretórios ignorados pelo Git
-
-├──**` README.md `**               # Documentação do projeto
-
-├── **`requirements.txt`**           # Lista de dependências do projeto
-
-└── **`run.py`**                   # Ponto de entrada da aplicação
-
-
-- **`migrations`**: Controla as migrações de banco de dados, permitindo modificar a estrutura do banco de forma controlada (usando Flask-Migrate).
-
-- **`tests`**: Diretório para os testes unitários e de integração.
-  - **`test_user.py`**: Exemplo de teste para a funcionalidade de usuários.
-
-- **`venv`**: Diretório do ambiente virtual. **Não deve ser versionado**, pois pode ser recriado por qualquer desenvolvedor.
-
-- **`.env`**: Arquivo com variáveis de ambiente (ex. credenciais e chaves secretas). **Não deve ser versionado**.
-
-- **`.gitignore`**: Arquivo que lista os arquivos e diretórios que devem ser ignorados pelo Git, como `venv/`, `.env`, e outros arquivos temporários.
-
-- **`README.md`**: Arquivo de documentação do projeto.
-
-- **`requirements.txt`**: Lista de todas as dependências do projeto. Use `pip install -r requirements.txt` para instalar as bibliotecas necessárias.
-
-- **`run.py`**: Ponto de entrada para rodar a aplicação. Executando `python run.py`, o servidor Flask será iniciado.
-
-**`Como Configurar o Ambiente de Desenvolvimento`**
-
-**`Passos para iniciar o projeto localmente:`**
-
-1. **`Clonar o repositório`**:
+1. **Clonar o Repositório**
    ```bash
    git clone https://github.com/edgargavioli/telegram-chat-bot.git
    cd telegram-chat-bot
-   
-2. **Crie e Ativar o Ambiente Virtual**:
-   ```bash
-   Windows:
-   python3 -m venv .venv
-   .venv\Scripts\activate
-   Linux/Mac:
-   python3 -m venv .venv
-   source .venv/bin/activate
-   
-3. **Delete a pasta venv`**
-  
-4. **Instale as dependências**:
+   ```
+
+2. **Criar e Ativar o Ambiente Virtual**
+   - **Windows**:
+     ```bash
+     python3 -m venv .venv
+     .venv\Scripts\activate
+     ```
+   - **Linux/Mac**:
+     ```bash
+     python3 -m venv .venv
+     source .venv/bin/activate
+     ```
+
+3. **Instalar as Dependências**
    ```bash
    pip install -r requirements.txt
+   ```
+
+4. **Configurar o Arquivo `.env`**
+   Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis de ambiente:
    
-5. **Execute a aplicação**:
+   **Exemplo de `.env`**:
+   ```bash
+   SECRET_KEY=mysecretkey
+   DATABASE_URL=mysql+pymysql://root:root@db:3306/telegram_bot_db
+   TELEGRAM_TOKEN=TOKEN_DO_SEU_BOT
+   ```
+
+5. **Configurar o Arquivo `config.py`**
+   
+   No arquivo `app/config.py`, insira o token do seu bot e outras informações relevantes:
+
+   **Exemplo de `config.py`**:
+   ```python
+   from typing import Final
+
+   TOKEN: Final = "TOKEN_DO_SEU_BOT"
+   BOT_USERNAME = "@NOME_DO_SEU_BOT"
+   API_URL = "http://web:5000/api"
+   IMG_PREFIX = "http://web:5000/static/img/produtos/"
+
+   cart = {}
+   waiting_city = {}
+   waiting_address = {}
+   waiting_number = {}
+   ```
+
+6. **Executar a Aplicação**
+   Após configurar os arquivos necessários, execute o servidor Flask:
+
    ```bash
    flask run
-   
-6. **Modo Debug(Hot Reload)**:
+   ```
 
-    ```bash
-  Windows (PowerShell):
-  $env:FLASK_DEBUG = "1" //utilizar comando no vscode usando powershell
-  flask run
+7. **Testando a Aplicação**
+   Acesse [http://localhost:5000/](http://localhost:5000/) para ver a página de login.
 
-  Linux e Mac
-  $ export FLASK_APP=run.py
-  $ export FLASK_DEBUG=1
-  flask run
+   **Criando um usuário padrão no MySQL**:
+   Execute o seguinte comando no MySQLWorkbench:
+   ```sql
+   use telegram_bot_db;
+   insert into users (name, username, password, role) values ("adm","adm","scrypt:32768:8:1$ZjnHI75BJDnhP1XU$d6196d74f79f5354c99b9b573226576b3825012ea72eec782b9f956ad9594e3ddb582f4afa62ad66f17ee884137ceb466d92af1729327857be81abd570f4d7c6","Admin");
+   ```
 
-7.**`Testando o Projeto`**:
+   - Após isso, faça login com:
+     - **Usuário**: `adm`
+     - **Senha**: `adm`
 
-Acesse http://localhost:5000/users/greet //Para ver a página exemplo desse projeto.
+---
 
-Observações:
+## **Como Rodar o Bot**
 
--Certifique-se de que o arquivo .env está configurado corretamente com as credenciais e chaves secretas necessárias.
--Não versione os diretórios venv/ e arquivos sensíveis como .env. Use o .gitignore para garantir isso.
+1. **Entrar no Diretório do Bot**
+   ```bash
+   cd bot
+   ```
 
-8.**`DOCKER`**
+2. **Instalar as Dependências**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
--Rodar a aplicação em Docker
+3. **Executar o Bot**
+   ```bash
+   python main.py
+   ```
 
--Criar e rodar o container:
-  docker-compose up --build
+---
 
+## **Como Rodar com Docker**
 
-**`Passo a Passo para Configurar o Bot no Celular`**
-  
-Siga os passos abaixo para acessar e configurar o bot:
-  
--Instalar o Telegram;
+1. **Configurar `.env` e `config.py` do Bot**
+   Certifique-se de que o token do seu bot está configurado corretamente nos arquivos `.env` e `config.py`.
 
--Certifique-se de que o aplicativo Telegram está instalado no seu celular;
+   **Exemplo de `config.py`**:
+   ```python
+   TOKEN: Final = "{TOKEN_DO_SEU_BOT}"
+   BOT_USERNAME = "@{NOME_DO_SEU_BOT}"
+   API_URL = "http://web:5000/api"
+   IMG_PREFIX = "http://web:5000/static/img/produtos/"
+   ```
 
--Abrir o Telegram;
+   **Exemplo de `.env`**:
+   ```bash
+   SECRET_KEY=mysecretkey
+   DATABASE_URL=mysql+pymysql://root:root@db:3306/telegram_bot_db
+   TELEGRAM_TOKEN=TOKEN_DO_SEU_BOT
+   ```
 
--Entre no aplicativo Telegram com sua conta;
+2. **Construir e Rodar o Docker**
+   Se você deseja usar Docker, execute o seguinte comando para construir e rodar os containers:
+   ```bash
+   docker-compose up --build
+   ```
 
--Acessar o BotFather;
+---
 
--Procure pelo usuário @BotFather no Telegram e inicie uma conversa com ele;
+### **Observações Finais**
 
--Criar um Bot;
+- **Arquivo `.env`**: Não versionado, contém informações sensíveis como credenciais. Crie seu próprio `.env` baseado no `.example.env`.
+- **Gitignore**: Certifique-se de que os diretórios `venv/` e arquivos como `.env` estão listados no `.gitignore` para evitar que sejam versionados.
 
-Siga as instruções fornecidas pelo BotFather para criar um novo bot;
+# Informações sobre o desenvolvimento:
 
-Obter o Token e o Username do Bot;
-
-Após criar o bot, o BotFather fornecerá o Token e o Username;
-
-Copie essas informações;
-
-Configurar o Projeto
--Insira o Token e o Username no arquivo config.py e no .env, localizados na raiz do projeto.
-
--Exemplo de como o .env deve ficar:
-
-BOT_TOKEN=seu_token_aqui
-BOT_USERNAME=seu_username_aqui
-
-Rodar o Projeto:
-
--Escolha uma das opções abaixo para rodar o projeto:
-
-Pelo arquivo main.py:
-
-python main.py
-
-Pelo Docker Compose:
-
-docker-compose up
-
-Pronto! Seu bot está configurado e pronto para uso. 🎉
+- Trabalhamos com hash de senha dos usuários do admin painel
+- Rotas protegidas que só podem ser acessadas com o token de segurança
+- Rotas sem proteção para que o bot possa acesa-la
+- WebSocket para a maior parte da conversação direta do bot com o front
